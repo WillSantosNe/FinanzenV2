@@ -51,6 +51,18 @@ public class TransactionService {
             .toList();
     }
 
+    /**
+     * Retrieves a specific transaction by its unique identifier.
+     * <p>
+     * This method attempts to find a transaction in the database using the provided ID.
+     * If found, it maps the entity to a {@link TransactionGetDto}. If not found, it throws
+     * an {@link EntityNotFoundException}.
+     * </p>
+     *
+     * @param id the unique identifier of the transaction to be retrieved.
+     * @return a {@link TransactionGetDto} containing the transaction details.
+     * @throws EntityNotFoundException if no transaction with the specified ID is found in the system.
+     */
     public TransactionGetDto findById(Long id) throws EntityNotFoundException{
         Transaction transaction = repository.findById(id).orElseThrow(() -> 
             new EntityNotFoundException("Transaction with the id " + id + " not found in the system"));
