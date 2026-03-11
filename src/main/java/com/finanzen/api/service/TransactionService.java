@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.finanzen.api.dto.TransactionCreateDto;
 import com.finanzen.api.dto.TransactionGetDto;
+import com.finanzen.api.dto.TransactionUpdateDto;
 import com.finanzen.api.model.Transaction;
 import com.finanzen.api.repository.TransactionRepository;
 
@@ -86,4 +87,17 @@ public class TransactionService {
 
         repository.deleteById(id);
     }
+
+    public TransactionGetDto update(Long id, TransactionUpdateDto dto){
+        Transaction transaction = repository.findById(id).orElseThrow(() -> 
+            new EntityNotFoundException("Transaction with the id " + id + " not found in the system"));
+
+        transaction.setDescription(dto.description());
+        transaction.setAmount(dto.amount());
+        transaction.setType(dto.type());
+
+        repository.save(transaction);
+        return new TransactionGetDto(transaction.getId(), transaction.getDescription(), transaction.getAmount(), transaction.getType(), transaction.getCreatedAt());
+    }
+
 }
