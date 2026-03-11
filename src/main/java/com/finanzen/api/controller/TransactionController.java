@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,7 +57,7 @@ public class TransactionController {
     }
     
     @PutMapping("/{id}")
-    public TransactionGetDto update(@PathVariable Long id, @RequestBody TransactionUpdateDto dto){
-        return service.update(id, dto);
+    public ResponseEntity<TransactionGetDto> update(@PathVariable Long id, @RequestBody TransactionUpdateDto dto){
+        return ResponseEntity.ok(service.update(id, dto));
     }
 }
