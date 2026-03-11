@@ -2,7 +2,6 @@ package com.finanzen.api.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -68,5 +67,12 @@ public class TransactionService {
             new EntityNotFoundException("Transaction with the id " + id + " not found in the system"));
 
         return new TransactionGetDto(transaction.getId(), transaction.getDescription(), transaction.getAmount(), transaction.getType(), transaction.getCreatedAt());
+    }
+
+    public void delete(Long id){
+        repository.findById(id).orElseThrow(() -> 
+            new EntityNotFoundException("Transaction with the id " + id + " not found in the system"));
+
+        repository.deleteById(id);
     }
 }
