@@ -88,6 +88,20 @@ public class TransactionService {
         repository.deleteById(id);
     }
 
+    /**
+     * Updates an existing transaction in the database.
+     * <p>
+     * This method verifies if a transaction exists for the given ID. If found, it updates
+     * the allowed fields (description, amount, and type) using the provided {@link TransactionUpdateDto}.
+     * The updated entity is then saved and mapped back to a {@link TransactionGetDto} directly from memory,
+     * avoiding redundant database queries for the response.
+     * </p>
+     *
+     * @param id the unique identifier of the transaction to be updated.
+     * @param dto the data transfer object containing the new values for the transaction.
+     * @return a {@link TransactionGetDto} containing the updated transaction details.
+     * @throws EntityNotFoundException if no transaction with the specified ID is found.
+     */
     public TransactionGetDto update(Long id, TransactionUpdateDto dto){
         Transaction transaction = repository.findById(id).orElseThrow(() -> 
             new EntityNotFoundException("Transaction with the id " + id + " not found in the system"));
