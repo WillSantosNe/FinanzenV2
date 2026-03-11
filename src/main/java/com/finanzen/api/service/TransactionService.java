@@ -69,6 +69,17 @@ public class TransactionService {
         return new TransactionGetDto(transaction.getId(), transaction.getDescription(), transaction.getAmount(), transaction.getType(), transaction.getCreatedAt());
     }
 
+    /**
+     * Deletes a specific transaction from the database.
+     * <p>
+     * This method first verifies the existence of the transaction using the provided ID.
+     * If the transaction is found, it is removed from the system. If it does not exist,
+     * an {@link EntityNotFoundException} is thrown to prevent silent failures or generic database errors.
+     * </p>
+     *
+     * @param id the unique identifier of the transaction to be deleted.
+     * @throws EntityNotFoundException if no transaction with the specified ID exists.
+     */
     public void delete(Long id){
         repository.findById(id).orElseThrow(() -> 
             new EntityNotFoundException("Transaction with the id " + id + " not found in the system"));
