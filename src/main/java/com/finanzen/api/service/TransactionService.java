@@ -31,8 +31,16 @@ public class TransactionService {
         return transaction;
     }
 
+    /**
+     * Retrieves all transactions from the database.
+     * <p>
+     * This method fetches all transaction entities and maps them into {@link TransactionGetDto}
+     * records to ensure that internal database models are not exposed to the client.
+     * </p>
+     *
+     * @return a list of {@link TransactionGetDto} containing the transaction details.
+     */
     public List<TransactionGetDto> findAll(){
-
         return repository.findAll()
             .stream()
             .map(t -> new TransactionGetDto(
