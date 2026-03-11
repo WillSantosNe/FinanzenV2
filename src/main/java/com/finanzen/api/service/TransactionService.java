@@ -1,10 +1,12 @@
 package com.finanzen.api.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import com.finanzen.api.dto.TransactionCreateDto;
+import com.finanzen.api.dto.TransactionGetDto;
 import com.finanzen.api.model.Transaction;
 import com.finanzen.api.repository.TransactionRepository;
 
@@ -27,5 +29,14 @@ public class TransactionService {
 
         repository.save(transaction);
         return transaction;
+    }
+
+    public List<TransactionGetDto> findAll(){
+
+        return repository.findAll()
+            .stream()
+            .map(t -> new TransactionGetDto(
+                t.getId(), t.getDescription(), t.getAmount(), t.getType(), t.getCreatedAt()))
+            .toList();
     }
 }
