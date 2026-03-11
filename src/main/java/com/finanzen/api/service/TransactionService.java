@@ -2,6 +2,7 @@ package com.finanzen.api.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -9,6 +10,8 @@ import com.finanzen.api.dto.TransactionCreateDto;
 import com.finanzen.api.dto.TransactionGetDto;
 import com.finanzen.api.model.Transaction;
 import com.finanzen.api.repository.TransactionRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class TransactionService {
@@ -46,5 +49,12 @@ public class TransactionService {
             .map(t -> new TransactionGetDto(
                 t.getId(), t.getDescription(), t.getAmount(), t.getType(), t.getCreatedAt()))
             .toList();
+    }
+
+    public TransactionGetDto findById(Long id) throws EntityNotFoundException{
+        Transaction transaction = repository.findById(id).orElseThrow(() -> 
+            new EntityNotFoundException("Transaction with the id " + id + " not found in the system"));
+
+        return new TransactionGetDto(transaction.getId(), transaction.getDescription(), transaction.getAmount(), transaction.getType(), transaction.getCreatedAt());
     }
 }
