@@ -23,7 +23,7 @@ public class TransactionService {
         this.repository = repository;
     }
 
-    public Transaction createTransaction(TransactionCreateDto dto){
+    public TransactionGetDto createTransaction(TransactionCreateDto dto){
         Transaction transaction = new Transaction();
         transaction.setDescription(dto.description());
         transaction.setAmount(dto.amount());
@@ -31,7 +31,8 @@ public class TransactionService {
         transaction.setCreatedAt(LocalDateTime.now());
 
         repository.save(transaction);
-        return transaction;
+        
+        return new TransactionGetDto(transaction.getId(), transaction.getDescription(), transaction.getAmount(), transaction.getType(), transaction.getCreatedAt());
     }
 
     /**
