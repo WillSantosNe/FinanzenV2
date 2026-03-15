@@ -59,7 +59,7 @@ public class TransactionController {
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<TransactionGetDto> update(@PathVariable Long id, @RequestBody TransactionUpdateDto dto){
+    public ResponseEntity<TransactionGetDto> update(@PathVariable Long id, @RequestBody @Valid TransactionUpdateDto dto){
         return ResponseEntity.ok(service.update(id, dto));
     }
 }
