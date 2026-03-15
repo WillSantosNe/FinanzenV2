@@ -8,6 +8,8 @@ import com.finanzen.api.dto.TransactionGetDto;
 import com.finanzen.api.dto.TransactionUpdateDto;
 import com.finanzen.api.service.TransactionService;
 
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -35,8 +37,8 @@ public class TransactionController {
         this.service = service;
     }
 
-    @PostMapping
-    public ResponseEntity<TransactionGetDto> createTransaction(@RequestBody TransactionCreateDto dto){
+    @PostMapping                        //Devemos usar @Valid para o Spring fazer as validações necessárias
+    public ResponseEntity<TransactionGetDto> createTransaction(@RequestBody @Valid TransactionCreateDto dto){
         return ResponseEntity.status(HttpStatus.CREATED).body(service.createTransaction(dto)); 
     }
 
