@@ -3,6 +3,8 @@ package com.finanzen.api.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import com.finanzen.api.dto.TransactionCreateDto;
@@ -44,12 +46,10 @@ public class TransactionService {
      *
      * @return a list of {@link TransactionGetDto} containing the transaction details.
      */
-    public List<TransactionGetDto> findAll(){
-        return repository.findAll()
-            .stream()
-            .map(t -> new TransactionGetDto(
-                t.getId(), t.getDescription(), t.getAmount(), t.getType(), t.getCreatedAt()))
-            .toList();
+    public Page<TransactionGetDto> findAll(Pageable pagination) {
+        return repository.findAll(pagination).map(t -> 
+            new TransactionGetDto(t.getId(), t.getDescription(), t.getAmount(), t.getType(), t.getCreatedAt())
+        );
     }
 
     /**

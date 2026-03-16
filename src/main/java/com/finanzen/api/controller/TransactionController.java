@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -43,8 +46,8 @@ public class TransactionController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TransactionGetDto>> findAll() {
-        return ResponseEntity.ok(service.findAll());
+    public ResponseEntity<Page<TransactionGetDto>> findAll(@PageableDefault(size = 10, sort = {"createdAt"}) Pageable pagination) {
+        return ResponseEntity.ok(service.findAll(pagination));
     }
 
     @GetMapping("/{id}")
