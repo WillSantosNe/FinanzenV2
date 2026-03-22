@@ -1,7 +1,9 @@
-package com.finanzen.api.model;
+package com.finanzen.api.infrastructure.repository;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+
+import com.finanzen.api.domain.TransactionType;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,7 +24,7 @@ import lombok.Setter;
 @Setter // Gera Setters
 @NoArgsConstructor
 @AllArgsConstructor // Facilita na criacao de objetos
-public class Transaction {
+public class TransactionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,10 +33,9 @@ public class Transaction {
     private String description;
     private BigDecimal amount;
 
-    @Column(name = "created_at") //snake_case no banco de dados
+    @Column(name = "created_at") // snake_case no banco de dados
     private LocalDateTime createdAt;
 
     @Enumerated(EnumType.STRING)
     private TransactionType type;
 }
-

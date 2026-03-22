@@ -1,18 +1,18 @@
-package com.finanzen.api.dto;
+package com.finanzen.api.infrastructure.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.finanzen.api.model.TransactionType;
+import com.finanzen.api.domain.TransactionType;
 
-public record TransactionGetDto (
+public record TransactionGetDto(
     Long id,
     String description,
     BigDecimal amount,
     TransactionType type,
 
-    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
-    LocalDateTime createdAt
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm") LocalDateTime createdAt
 
-){}
+) {
+}

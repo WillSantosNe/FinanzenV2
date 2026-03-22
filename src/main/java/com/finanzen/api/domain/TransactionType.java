@@ -1,4 +1,4 @@
-package com.finanzen.api.model;
+package com.finanzen.api.domain;
 
 public enum TransactionType {
     INCOME,

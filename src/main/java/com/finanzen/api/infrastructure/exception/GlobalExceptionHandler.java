@@ -1,4 +1,4 @@
-package com.finanzen.api.exception;
+package com.finanzen.api.infrastructure.exception;
 
 import java.util.List;
 
