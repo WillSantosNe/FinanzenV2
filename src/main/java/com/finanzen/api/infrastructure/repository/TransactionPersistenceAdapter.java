@@ -44,7 +44,7 @@ public class TransactionPersistenceAdapter implements TransactionRepositoryPort 
         // Salva no repository a entity criada
         TransactionEntity savEntity = repository.save(entity);
 
-        // Retorna o dominio puro convertido de uma entity
+        // Retorna o dominio puro convertido de uma entity 
         return TransactionMapper.toDomain(savEntity);
     }
 
