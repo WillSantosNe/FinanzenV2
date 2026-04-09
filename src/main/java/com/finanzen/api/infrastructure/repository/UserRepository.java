@@ -19,4 +19,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
      * @return an {@link Optional} containing the user if found.
      */
     Optional<UserEntity> findByEmail(String email);
+
+    boolean existsByEmail(String email);
 }

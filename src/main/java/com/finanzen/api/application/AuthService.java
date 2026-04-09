@@ -3,6 +3,7 @@ package com.finanzen.api.application;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.finanzen.api.application.exception.DuplicateEmailException;
 import com.finanzen.api.domain.Role;
 import com.finanzen.api.domain.User;
 import com.finanzen.api.infrastructure.dto.UserCreateDto;
@@ -37,6 +38,12 @@ public class AuthService {
      * @param dto the data transfer object containing the user's email and raw password.
      */
     public void register(UserCreateDto dto) {
+        // Verificando se já existe email
+        //  Barramos aqui já para não passar a responsabilidade para o repository.
+        if(repository.existsByEmail(dto.email())){
+            throw new DuplicateEmailException("The email address provided is already in use.");
+        }
+
         String encodedPassword = passwordEncoder.encode(dto.password());
         User user = new User(null, dto.email(), encodedPassword, Role.USER);
 
