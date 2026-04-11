@@ -2,6 +2,8 @@ package com.finanzen.api.infrastructure.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -45,5 +47,25 @@ public class SecurityConfig {
                         // Todos os outros endpoints exigirão autenticação
                         .anyRequest().authenticated())
                 .build();
+    }
+
+
+    /**
+     * Exposes the AuthenticationManager as a Spring Bean.
+     * <p>
+     * The AuthenticationManager is the core interface for Spring Security's 
+     * authentication process. By exposing it here, we allow the AuthController 
+     * to trigger the authentication flow manually upon receiving login requests.
+     * </p>
+     *
+     * @param authenticationConfiguration the Spring Security configuration.
+     * @return the configured {@link AuthenticationManager}.
+     * @throws Exception if an error occurs during configuration.
+     */
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        // O Spring por padrão esconde o AuthenticationManager
+        // Esse método é necessário para podermos chamar no controller
+        return authenticationConfiguration.getAuthenticationManager();
     }
 }
