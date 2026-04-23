@@ -5,6 +5,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,21 +29,15 @@ import jakarta.validation.Valid;
  * Web Adapter (Inbound Adapter) for managing transactions.
  * <p>
  * This REST controller acts as the entry point for HTTP traffic. It is
- * responsible for
- * translating external web requests (JSON/DTOs) into domain commands by
- * delegating
- * the execution to the Inbound Port ({@link TransactionUseCase}). It also maps
- * the
- * domain responses back to safe DTOs, ensuring the domain model is never
- * exposed
- * directly to the client.
+ * responsible for translating external web requests (JSON/DTOs) into domain 
+ * commands by delegating the execution to the Inbound Port ({@link TransactionUseCase}). 
+ * It enforces Role-Based Access Control (RBAC) and data isolation.
  * </p>
  */
 @RestController
 @RequestMapping("/transactions")
 public class TransactionController {
 
-    // Realizando injeção de dependencias do useCase (Nossa Porta de Entrada)
     private final TransactionUseCase useCase;
 
     public TransactionController(TransactionUseCase useCase) {
@@ -48,16 +45,15 @@ public class TransactionController {
     }
 
     /**
-     * Handles the creation of a new transaction.
-     *
-     * @param dto the validated data transfer object containing the transaction
-     *            details.
-     * @return a {@link ResponseEntity} containing the created
-     *         {@link TransactionGetDto} and a 201 Created status.
+     * Handles the creation of a new transaction securely tied to the logged-in user.
      */
-    @PostMapping // Devemos usar @Valid para o Spring fazer as validações necessárias
-    public ResponseEntity<TransactionGetDto> createTransaction(@RequestBody @Valid TransactionCreateDto dto) {
-        Transaction transaction = useCase.create(dto);
+    @PostMapping 
+    public ResponseEntity<TransactionGetDto> createTransaction(
+            @RequestBody @Valid TransactionCreateDto dto,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        
+        // Passamos o e-mail extraído do Token direto para o UseCase
+        Transaction transaction = useCase.create(dto, userDetails.getUsername());
 
         TransactionGetDto transactionGetDto = new TransactionGetDto(
                 transaction.getId(),
@@ -70,38 +66,74 @@ public class TransactionController {
     }
 
     /**
-     * Retrieves a paginated list of transactions.
-     *
-     * @param pagination the default or client-provided pagination and sorting
-     *                   parameters.
-     * @return a {@link ResponseEntity} containing a paginated list of
-     *         {@link TransactionGetDto}.
+     * ADMIN ONLY: Retrieves a paginated list of ALL transactions in the system.
      */
-    @GetMapping
-    public ResponseEntity<Page<TransactionGetDto>> findAll(
-            @PageableDefault(size = 10, sort = { "createdAt" }) Pageable pagination) {
-
-        Page<Transaction> transactionsPage = useCase.getAll(pagination);
-
-        Page<TransactionGetDto> dtosPage = transactionsPage.map(transaction -> new TransactionGetDto(
+    @GetMapping("/all")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Page<TransactionGetDto>> findAllSystemWide(@PageableDefault(size = 10) Pageable pagination) {
+        
+        Page<Transaction> domainPage = useCase.findAllSystemWide(pagination);
+        
+        // Convertendo a Página de Domínio para Página de DTO
+        Page<TransactionGetDto> dtoPage = domainPage.map(transaction -> new TransactionGetDto(
                 transaction.getId(),
                 transaction.getDescription(),
                 transaction.getAmount(),
                 transaction.getType(),
-                transaction.getCreatedAt()));
+                transaction.getCreatedAt()
+        ));
 
-        return ResponseEntity.ok(dtosPage);
+        return ResponseEntity.ok(dtoPage);
+    }
+
+    /**
+     * USER: Retrieves a paginated list of transactions belonging ONLY to the authenticated user.
+     */
+    @GetMapping
+    public ResponseEntity<Page<TransactionGetDto>> findAllMyTransactions(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PageableDefault(size = 10) Pageable pagination) {
+        
+        // Isolamento Horizontal: O usuário só busca pelo próprio e-mail
+        Page<Transaction> domainPage = useCase.findAllByUserEmail(userDetails.getUsername(), pagination);
+        
+        Page<TransactionGetDto> dtoPage = domainPage.map(transaction -> new TransactionGetDto(
+                transaction.getId(),
+                transaction.getDescription(),
+                transaction.getAmount(),
+                transaction.getType(),
+                transaction.getCreatedAt()
+        ));
+
+        return ResponseEntity.ok(dtoPage);
     }
 
     /**
      * Retrieves a specific transaction by its ID.
-     *
-     * @param id the unique identifier of the transaction.
-     * @return a {@link ResponseEntity} containing the {@link TransactionGetDto}.
      */
     @GetMapping("/{id}")
     public ResponseEntity<TransactionGetDto> findById(@PathVariable Long id) {
-        Transaction transaction = useCase.getById(id);
+        Transaction transaction = useCase.findById(id);
+
+        TransactionGetDto transactionGetDto = new TransactionGetDto(
+                transaction.getId(),
+                transaction.getDescription(),
+                transaction.getAmount(),
+                transaction.getType(),
+                transaction.getCreatedAt());
+
+        return ResponseEntity.ok(transactionGetDto);
+    }
+
+    /**
+     * Updates an existing transaction.
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<TransactionGetDto> update(
+            @PathVariable Long id,
+            @RequestBody @Valid TransactionUpdateDto dto) {
+
+        Transaction transaction = useCase.update(id, dto);
 
         TransactionGetDto transactionGetDto = new TransactionGetDto(
                 transaction.getId(),
@@ -115,37 +147,10 @@ public class TransactionController {
 
     /**
      * Deletes a transaction from the system.
-     *
-     * @param id the unique identifier of the transaction to be deleted.
-     * @return a {@link ResponseEntity} with a 204 No Content status.
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         useCase.delete(id);
         return ResponseEntity.noContent().build();
-    }
-
-    /**
-     * Updates an existing transaction.
-     *
-     * @param id  the unique identifier of the transaction to be updated.
-     * @param dto the validated data transfer object containing the new values.
-     * @return a {@link ResponseEntity} containing the updated
-     *         {@link TransactionGetDto}.
-     */
-    @PutMapping("/{id}")
-    public ResponseEntity<TransactionGetDto> update(@PathVariable Long id,
-            @RequestBody @Valid TransactionUpdateDto dto) {
-
-        Transaction transaction = useCase.update(id, dto);
-
-        TransactionGetDto transactionGetDto = new TransactionGetDto(
-                transaction.getId(),
-                transaction.getDescription(),
-                transaction.getAmount(),
-                transaction.getType(),
-                transaction.getCreatedAt());
-
-        return ResponseEntity.ok(transactionGetDto);
     }
 }

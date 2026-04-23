@@ -2,6 +2,7 @@ package com.finanzen.api.infrastructure.repository;
 
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  * Spring Data JPA repository for the User entity.
@@ -10,6 +11,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * the security layer to retrieve user credentials during the authentication process.
  * </p>
  */
+@Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     /**

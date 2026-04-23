@@ -18,12 +18,13 @@ import com.finanzen.api.infrastructure.dto.TransactionUpdateDto;
 public interface TransactionUseCase {
     
     /**
-     * Processes the creation of a new financial transaction.
+     * Processes the creation of a new financial transaction and links it to a user.
      *
      * @param dto the data transfer object containing the creation details.
+     * @param userEmail the email of the authenticated user creating the transaction.
      * @return the saved pure {@link Transaction} domain object.
      */
-    Transaction create(TransactionCreateDto dto);
+    Transaction create(TransactionCreateDto dto, String userEmail);
     
     /**
      * Retrieves a specific transaction by its unique identifier.
@@ -31,15 +32,24 @@ public interface TransactionUseCase {
      * @param id the transaction identifier.
      * @return the corresponding {@link Transaction} domain object.
      */
-    Transaction getById(Long id);
+    Transaction findById(Long id);
     
     /**
-     * Retrieves a paginated list of all registered transactions.
+     * ADMIN ONLY: Retrieves a paginated list of all registered transactions in the system.
      *
      * @param pagination the pagination and sorting information.
      * @return a {@link Page} containing {@link Transaction} domain objects.
      */
-    Page<Transaction> getAll(Pageable pagination);
+    Page<Transaction> findAllSystemWide(Pageable pagination);
+
+    /**
+     * USER: Retrieves a paginated list of transactions belonging to a specific user.
+     *
+     * @param userEmail the email of the owner.
+     * @param pagination the pagination and sorting information.
+     * @return a {@link Page} containing {@link Transaction} domain objects.
+     */
+    Page<Transaction> findAllByUserEmail(String userEmail, Pageable pagination);
     
     /**
      * Processes the full update of an existing transaction.

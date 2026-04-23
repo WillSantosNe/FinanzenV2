@@ -17,7 +17,7 @@ public class TransactionMapper {
      *
      * @param entity the JPA entity retrieved from the database.
      * @return the corresponding {@link Transaction} domain object, or null if the
-     *         input is null.
+     * input is null.
      */
     public static Transaction toDomain(TransactionEntity entity) {
         if (entity == null)
@@ -28,7 +28,9 @@ public class TransactionMapper {
                 entity.getDescription(),
                 entity.getAmount(),
                 entity.getCreatedAt(),
-                entity.getType());
+                entity.getType(),
+                entity.getUserEmail() 
+        );
     }
 
     /**
@@ -37,7 +39,7 @@ public class TransactionMapper {
      *
      * @param domain the pure domain object.
      * @return the corresponding {@link TransactionEntity} ready to be persisted, or
-     *         null if the input is null.
+     * null if the input is null.
      */
     public static TransactionEntity toEntity(Transaction domain) {
         if (domain == null)
@@ -48,6 +50,8 @@ public class TransactionMapper {
                 domain.getDescription(),
                 domain.getAmount(),
                 domain.getCreatedAt(),
-                domain.getType());
+                domain.getType(),
+                domain.getUserEmail() 
+        );
     }
 }

@@ -18,7 +18,6 @@ import com.finanzen.api.domain.Transaction;
  */
 public interface TransactionRepositoryPort {
 
-    // Usando o domínio, e não a entity do banco
     /**
      * Saves or updates a domain object in the underlying storage.
      *
@@ -36,12 +35,21 @@ public interface TransactionRepositoryPort {
     Optional<Transaction> findById(Long id);
 
     /**
-     * Retrieves a paginated list of transactions from the storage.
+     * ADMIN ONLY: Retrieves a paginated list of all transactions from the storage.
      *
      * @param pagination the limit and sorting configurations.
      * @return a {@link Page} containing the mapped domain objects.
      */
-    Page<Transaction> findAll(Pageable pagination);
+    Page<Transaction> findAllSystemWide(Pageable pagination);
+
+    /**
+     * USER: Retrieves a paginated list of transactions filtered by the owner's email.
+     *
+     * @param userEmail the email of the user who owns the transactions.
+     * @param pagination the limit and sorting configurations.
+     * @return a {@link Page} containing the mapped domain objects.
+     */
+    Page<Transaction> findAllByUserEmail(String userEmail, Pageable pagination);
 
     /**
      * Physically removes a transaction from the storage.

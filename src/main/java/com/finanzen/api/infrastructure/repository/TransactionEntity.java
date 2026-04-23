@@ -38,4 +38,7 @@ public class TransactionEntity {
 
     @Enumerated(EnumType.STRING)
     private TransactionType type;
+
+    @Column(name = "user_email") 
+    private String userEmail;
 }

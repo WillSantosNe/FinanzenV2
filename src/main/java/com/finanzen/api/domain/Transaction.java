@@ -9,13 +9,15 @@ public class Transaction {
     private BigDecimal amount;
     private LocalDateTime createdAt;
     private TransactionType type;
+    private String userEmail;
     
-    public Transaction(Long id, String description, BigDecimal amount, LocalDateTime createdAt, TransactionType type) {
+    public Transaction(Long id, String description, BigDecimal amount, LocalDateTime createdAt, TransactionType type, String userEmail) {
         this.id = id;
         this.description = description;
         this.amount = amount;
         this.createdAt = createdAt;
         this.type = type;
+        this.userEmail = userEmail;
     }
 
     public Long getId() {
@@ -58,6 +60,15 @@ public class Transaction {
         this.type = type;
     }
 
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+    
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -82,6 +93,7 @@ public class Transaction {
             return false;
         return true;
     }
+
 
     
 }

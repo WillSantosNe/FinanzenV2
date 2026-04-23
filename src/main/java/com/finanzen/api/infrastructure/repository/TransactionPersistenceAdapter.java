@@ -19,8 +19,7 @@ import com.finanzen.api.domain.Transaction;
  * and translates the results back to the domain model.
  * </p>
  */
-@Component // Uso de @Component para o string criar a classe e injetar onde precisarem da
-           // porta
+@Component
 public class TransactionPersistenceAdapter implements TransactionRepositoryPort {
 
     private final TransactionRepository repository;
@@ -29,13 +28,6 @@ public class TransactionPersistenceAdapter implements TransactionRepositoryPort 
         this.repository = repository;
     }
 
-    /**
-     * Translates the domain object to an entity, saves it to the database,
-     * and returns the persisted state as a domain object.
-     *
-     * @param transaction the pure domain object to be saved.
-     * @return the saved {@link Transaction} domain object.
-     */
     @Override
     public Transaction save(Transaction transaction) {
         // Converte dominio puro em entity
@@ -48,36 +40,25 @@ public class TransactionPersistenceAdapter implements TransactionRepositoryPort 
         return TransactionMapper.toDomain(savEntity);
     }
 
-    /**
-     * Queries the database for a transaction entity and translates it to a domain
-     * object.
-     *
-     * @param id the transaction identifier.
-     * @return an {@link Optional} containing the mapped domain object if found.
-     */
     @Override
     public Optional<Transaction> findById(Long id) {
         return repository.findById(id).map(TransactionMapper::toDomain);
     }
 
-    /**
-     * Retrieves a paginated list of entities from the database and maps them to
-     * domain objects.
-     *
-     * @param pagination the pagination parameters.
-     * @return a {@link Page} of mapped {@link Transaction} domain objects.
-     */
     @Override
-    public Page<Transaction> findAll(Pageable pagination) {
+    public Page<Transaction> findAllSystemWide(Pageable pagination) {
+        // Busca absolutamente tudo no banco (Para Admins)
         return repository.findAll(pagination)
                 .map(TransactionMapper::toDomain);
     }
 
-    /**
-     * Physically deletes a transaction from the underlying database.
-     *
-     * @param id the transaction identifier.
-     */
+    @Override
+    public Page<Transaction> findAllByUserEmail(String userEmail, Pageable pagination) {
+        // Manda o email para o JPA filtrar direto no SQL (Para Usuários Comuns)
+        return repository.findAllByUserEmail(userEmail, pagination)
+                .map(TransactionMapper::toDomain);
+    }
+
     @Override
     public void deleteById(Long id) {
         repository.deleteById(id);

@@ -25,96 +25,74 @@ public class TransactionService implements TransactionUseCase {
     }
 
     /**
-     * Creates a new transaction in the system.
-     * <p>
-     * Converts the inbound data transfer object into a pure Domain entity and
-     * delegates the persistence to the outbound port.
-     * </p>
-     * * @param dto the data transfer object containing the transaction details.
-     * 
+     * Creates a new transaction in the system securely tied to an owner.
+     *
+     * @param dto the data transfer object containing the transaction details.
+     * @param userEmail the email of the user who owns this transaction.
      * @return the created {@link Transaction} domain object.
      */
     @Override
-    public Transaction create(TransactionCreateDto dto) {
-        // Transformando FTO de Entrada em Domain
+    public Transaction create(TransactionCreateDto dto, String userEmail) {
+        // Transformando DTO de Entrada em Domain Pura
         Transaction transaction = new Transaction(
                 null,
                 dto.description(),
                 dto.amount(),
                 LocalDateTime.now(),
-                dto.type());
+                dto.type(),
+                userEmail
+        );
         return persistencePort.save(transaction);
     }
 
     /**
-     * Retrieves a paginated list of all transactions.
-     * <p>
-     * This method fetches the transaction domain objects through the persistence
-     * port,
-     * abstracting away the underlying database technology.
-     * </p>
+     * Retrieves a paginated list of all transactions (Admin usage).
      *
      * @param pagination the pagination and sorting information.
      * @return a {@link Page} of {@link Transaction} domain objects.
      */
     @Override
-    public Page<Transaction> getAll(Pageable pagination) {
-        return persistencePort.findAll(pagination);
+    public Page<Transaction> findAllSystemWide(Pageable pagination) {
+        return persistencePort.findAllSystemWide(pagination);
+    }
+
+    /**
+     * Retrieves a paginated list of transactions filtered by the owner's email (User usage).
+     *
+     * @param userEmail the email of the owner.
+     * @param pagination the pagination and sorting information.
+     * @return a {@link Page} of {@link Transaction} domain objects.
+     */
+    @Override
+    public Page<Transaction> findAllByUserEmail(String userEmail, Pageable pagination) {
+        // Nota: Você precisará adicionar este método na sua interface TransactionRepositoryPort
+        return persistencePort.findAllByUserEmail(userEmail, pagination);
     }
 
     /**
      * Retrieves a specific transaction by its unique identifier.
-     * <p>
-     * Fetches the domain object via the persistence port. If the record does not
-     * exist,
-     * it halts the flow to prevent further processing.
-     * </p>
      *
      * @param id the unique identifier of the transaction.
      * @return the {@link Transaction} domain object.
      * @throws EntityNotFoundException if no transaction is found.
      */
-    public Transaction getById(Long id) throws EntityNotFoundException {
-        Transaction transaction = persistencePort.findById(id).orElseThrow(
+    @Override
+    public Transaction findById(Long id) throws EntityNotFoundException {
+        return persistencePort.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Transaction with the id " + id + " not found in the system"));
-
-        return transaction;
-    }
-
-    /**
-     * Deletes a specific transaction from the system.
-     * <p>
-     * First verifies the existence of the domain object to ensure safe deletion.
-     * If found, delegates the physical removal to the persistence port.
-     * </p>
-     *
-     * @param id the unique identifier of the transaction to be deleted.
-     * @throws EntityNotFoundException if the transaction does not exist prior to
-     *                                 deletion.
-     */
-    public void delete(Long id) {
-        persistencePort.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Transaction with the id " + id + " not found in the system"));
-
-        persistencePort.deleteById(id);
     }
 
     /**
      * Updates an existing transaction.
-     * <p>
-     * Retrieves the existing domain object, mutates its state with the provided
-     * inbound data,
-     * and delegates the update operation to the persistence port.
-     * </p>
      *
      * @param id  the unique identifier of the transaction to be updated.
      * @param dto the data transfer object containing the new values.
      * @return the updated {@link Transaction} domain object.
      * @throws EntityNotFoundException if the transaction is not found.
      */
+    @Override
     public Transaction update(Long id, TransactionUpdateDto dto) {
-        Transaction transaction = persistencePort.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Transaction with the id " + id + " not found in the system"));
+        Transaction transaction = this.findById(id); // Reutilizando nosso próprio método para lançar exceção!
 
         transaction.setDescription(dto.description());
         transaction.setAmount(dto.amount());
@@ -124,4 +102,15 @@ public class TransactionService implements TransactionUseCase {
         return transaction;
     }
 
+    /**
+     * Deletes a specific transaction from the system.
+     *
+     * @param id the unique identifier of the transaction to be deleted.
+     * @throws EntityNotFoundException if the transaction does not exist prior to deletion.
+     */
+    @Override
+    public void delete(Long id) {
+        this.findById(id); // Verifica se existe antes de deletar
+        persistencePort.deleteById(id);
+    }
 }
