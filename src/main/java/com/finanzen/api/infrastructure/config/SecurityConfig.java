@@ -8,6 +8,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  * Global Security Configuration for the API.
@@ -20,7 +23,10 @@ import org.springframework.security.web.SecurityFilterChain;
  */
 @Configuration
 @EnableWebSecurity // Habilita a segurança na nossa API
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final SecurityFilter securityFilter;
 
     /**
      * Configures the main security filter chain.
@@ -46,6 +52,7 @@ public class SecurityConfig {
 
                         // Todos os outros endpoints exigirão autenticação
                         .anyRequest().authenticated())
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
