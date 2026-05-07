@@ -1,0 +1,32 @@
+services:
+  # Serviço do banco de dados
+  finanzen-db:
+    image: postgres:15-alpine
+    container_name: finanzen-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: finanzen_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password123
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  # Serviço de API
+  finanzen-api:
+    build: .
+    container_name: finanzen-spring-api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - finanzen-db
+    environment:
+      # Usando o serviço de banco de dados
+      SPRING_DATASOURCE_URL: jdbc:postgresql://finanzen-db:5432/finanzen_db
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: password123
+      API_SECURITY_TOKEN_SECRET: finanzen-secretkey
+
+volumes:
+  pgdata:
