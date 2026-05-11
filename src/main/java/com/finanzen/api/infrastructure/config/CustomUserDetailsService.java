@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.finanzen.api.infrastructure.repository.UserRepository;
+import com.finanzen.api.adapters.outbound.repositories.JpaUserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor // Para não precisar criar o construtor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserRepository repository;
+    private final JpaUserRepository repository;
 
     /**
      * Locates the user based on the email address.
