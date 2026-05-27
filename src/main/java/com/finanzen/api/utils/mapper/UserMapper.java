@@ -1,17 +1,17 @@
 package com.finanzen.api.utils.mapper;
 
-import com.finanzen.api.adapters.outbound.entities.JpaUserEntity;
+import com.finanzen.api.adapters.out.user.JpaUserEntity;
 import com.finanzen.api.domain.user.User;
 
 /**
  * Utility class for mapping between the pure User domain model and the UserEntity.
  * <p>
- * This mapper ensures that the core domain remains isolated by translating data 
+ * This mapper ensures that the core domain remains isolated by translating data
  * between the infrastructure layer and the application core.
  * </p>
  */
 public class UserMapper {
-    
+
     /**
      * Converts a JPA entity into a pure domain object.
      *
@@ -24,10 +24,10 @@ public class UserMapper {
         }
 
         return new User(
-            entity.getId(), 
-            entity.getEmail(),
-            entity.getPassword(),
-            entity.getRole());
+                entity.getId(),
+                entity.getEmail(),
+                entity.getPassword(),
+                entity.getRole());
     }
 
     /**
@@ -43,10 +43,10 @@ public class UserMapper {
         }
 
         return new JpaUserEntity(
-            domain.getId(),
-            domain.getEmail(),
-            domain.getPassword(),
-            domain.getRole()
+                domain.getId(),
+                domain.getEmail(),
+                domain.getPassword(),
+                domain.getRole()
         );
     }
 }

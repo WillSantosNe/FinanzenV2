@@ -1,6 +1,6 @@
 package com.finanzen.api.utils.mapper;
 
-import com.finanzen.api.adapters.outbound.entities.JpaTransactionEntity;
+import com.finanzen.api.adapters.out.transaction.JpaTransactionEntity;
 import com.finanzen.api.domain.transaction.Transaction;
 
 /**
@@ -30,7 +30,7 @@ public class TransactionMapper {
                 entity.getAmount(),
                 entity.getCreatedAt(),
                 entity.getType(),
-                entity.getUserEmail() 
+                entity.getUserEmail()
         );
     }
 
@@ -52,7 +52,7 @@ public class TransactionMapper {
                 domain.getAmount(),
                 domain.getCreatedAt(),
                 domain.getType(),
-                domain.getUserEmail() 
+                domain.getUserEmail()
         );
     }
 }

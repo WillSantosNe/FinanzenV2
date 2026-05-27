@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.finanzen.api.adapters.outbound.repositories.JpaUserRepository;
+import com.finanzen.api.adapters.out.user.JpaUserRepository;
 
 import lombok.RequiredArgsConstructor;
 

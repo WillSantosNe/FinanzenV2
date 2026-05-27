@@ -12,6 +12,10 @@ public class Transaction {
     private String userEmail;
     
     public Transaction(Long id, String description, BigDecimal amount, LocalDateTime createdAt, TransactionType type, String userEmail) {
+        if (amount != null && amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("The transaction amount must be greater than zero.");
+        }
+
         this.id = id;
         this.description = description;
         this.amount = amount;
