@@ -8,6 +8,14 @@ import com.finanzen.api.domain.user.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+/**
+ * Application Service (Use Case) for user registration.
+ * <p>
+ * This service implements the {@link CreateUserPort}. It orchestrates the
+ * business rules for user creation, including email uniqueness validation
+ * and password security (hashing).
+ * </p>
+ */
 @Service
 public class CreateUserUseCase implements CreateUserPort {
 
@@ -20,19 +28,20 @@ public class CreateUserUseCase implements CreateUserPort {
     }
 
     /**
-     * Creates a new user in the system.
+     * Executes the use case to register a new user.
      *
-     * @param user the user object containing the  details.
-     * @return the created {@link User} domain object.
+     * @param user the pure domain object containing raw user registration data.
+     * @return the created {@link User} domain object, including the assigned ID and role.
+     * @throws DuplicateEmailException if the email is already registered in the system.
      */
     @Override
     public User create(User user) {
-
-        // Verifica se email já existe
+        // Regra de Negócio: Email deve ser único
         if(repository.existsByEmail(user.getEmail())) {
             throw new DuplicateEmailException("The email address provided is already in use.");
         }
 
+        // Regra de Negócio: Senha deve ser criptografada e role padrão definida
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         user.setRole(Role.USER);

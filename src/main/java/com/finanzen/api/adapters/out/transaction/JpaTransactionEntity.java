@@ -2,9 +2,7 @@ package com.finanzen.api.adapters.out.transaction;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
 import com.finanzen.api.domain.transaction.TransactionType;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -18,12 +16,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Infrastructure Database Entity for Transaction persistence (JPA/Hibernate).
+ * <p>
+ * This class serves exclusively as the Object-Relational Mapping (ORM) definition
+ * for the "transactions" table. It isolated persistence-specific configurations,
+ * column structures, and annotations away from the core Domain layer.
+ * </p>
+ */
 @Entity(name = "Transaction")
 @Table(name = "transactions")
-@Getter // Gera Getters
-@Setter // Gera Setters
+@Getter
+@Setter
 @NoArgsConstructor
-@AllArgsConstructor // Facilita na criacao de objetos
+@AllArgsConstructor
 public class JpaTransactionEntity {
 
     @Id
@@ -33,12 +39,12 @@ public class JpaTransactionEntity {
     private String description;
     private BigDecimal amount;
 
-    @Column(name = "created_at") // snake_case no banco de dados
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @Enumerated(EnumType.STRING)
     private TransactionType type;
 
-    @Column(name = "user_email") 
+    @Column(name = "user_email")
     private String userEmail;
 }

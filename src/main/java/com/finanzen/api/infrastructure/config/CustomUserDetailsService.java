@@ -1,5 +1,6 @@
 package com.finanzen.api.infrastructure.config;
 
+import com.finanzen.api.adapters.out.user.JpaUserEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,7 +14,7 @@ import lombok.RequiredArgsConstructor;
  * Custom implementation of Spring Security's {@link UserDetailsService}.
  * <p>
  * This service acts as the bridge between the application's database and the 
- * Spring Security authentication manager. It fetches the {@link UserEntity} 
+ * Spring Security authentication manager. It fetches the {@link JpaUserEntity}
  * (which implements UserDetails) using the provided email address.
  * </p>
  */

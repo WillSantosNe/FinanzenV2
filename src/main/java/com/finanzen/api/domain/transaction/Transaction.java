@@ -3,6 +3,18 @@ package com.finanzen.api.domain.transaction;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * Pure domain model representing a financial transaction in the system.
+ * <p>
+ * This class encapsulates the core business rules and state for a Transaction.
+ * It is completely isolated from external frameworks, annotations, and
+ * infrastructure details, strictly adhering to Hexagonal Architecture principles.
+ * </p>
+ * * <b>Business Rules:</b>
+ * <ul>
+ * <li>The transaction amount must always be strictly greater than zero.</li>
+ * </ul>
+ */
 public class Transaction {
     private Long id;
     private String description;
@@ -10,8 +22,20 @@ public class Transaction {
     private LocalDateTime createdAt;
     private TransactionType type;
     private String userEmail;
-    
+
+    /**
+     * Constructs a new Transaction and enforces initial business invariants.
+     *
+     * @param id          the unique identifier of the transaction (null if not yet persisted).
+     * @param description a brief explanation of the transaction.
+     * @param amount      the monetary value of the transaction (must be positive).
+     * @param createdAt   the exact timestamp when the transaction occurred or was registered.
+     * @param type        the classification of the transaction (e.g., INCOME, EXPENSE).
+     * @param userEmail   the email of the user who owns this transaction.
+     * @throws IllegalArgumentException if the provided amount is zero or negative.
+     */
     public Transaction(Long id, String description, BigDecimal amount, LocalDateTime createdAt, TransactionType type, String userEmail) {
+        // Regra de Negócio Pura e Isolada!
         if (amount != null && amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("The transaction amount must be greater than zero.");
         }
@@ -71,7 +95,6 @@ public class Transaction {
     public void setUserEmail(String userEmail) {
         this.userEmail = userEmail;
     }
-    
 
     @Override
     public int hashCode() {
@@ -81,6 +104,13 @@ public class Transaction {
         return result;
     }
 
+    /**
+     * Evaluates equality based strictly on the unique identifier (ID).
+     * <p>
+     * Two transactions are considered equal if they have the same non-null ID,
+     * regardless of their current mutable state (description, amount, etc.).
+     * </p>
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -97,7 +127,4 @@ public class Transaction {
             return false;
         return true;
     }
-
-
-    
 }

@@ -6,6 +6,14 @@ import com.finanzen.api.application.ports.out.user.UserRepositoryPort;
 import com.finanzen.api.domain.user.User;
 import org.springframework.stereotype.Service;
 
+/**
+ * Application Service (Use Case) for retrieving a specific user by ID.
+ * <p>
+ * This service implements the {@link FindUserByIdPort}. It ensures that the
+ * retrieval process handles missing users gracefully by mapping the result
+ * to a domain-specific {@link UserNotFoundException}.
+ * </p>
+ */
 @Service
 public class FindUserByIdUseCase implements FindUserByIdPort {
 
@@ -16,11 +24,11 @@ public class FindUserByIdUseCase implements FindUserByIdPort {
     }
 
     /**
-     * Retrieves a specific user by its unique identifier.
+     * Executes the use case to find a user by their unique identifier.
      *
      * @param id the unique identifier of the user.
      * @return the {@link User} domain object.
-     * @throws UserNotFoundException if no user is found.
+     * @throws UserNotFoundException if no user is found with the given ID.
      */
     @Override
     public User findById(Long id) throws UserNotFoundException {

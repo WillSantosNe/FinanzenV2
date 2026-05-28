@@ -7,6 +7,15 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+/**
+ * Application Service (Use Case) for creating new transactions.
+ * <p>
+ * This service implements the {@link CreateTransactionPort} to handle the
+ * business logic of creating a new financial record. It enriches the domain
+ * object with system-generated data (e.g., current timestamp, owner ownership)
+ * before persistence.
+ * </p>
+ */
 @Service
 public class CreateTransactionUseCase implements CreateTransactionPort {
 
@@ -16,13 +25,12 @@ public class CreateTransactionUseCase implements CreateTransactionPort {
         this.repository = repository;
     }
 
-
     /**
-     * Creates a new transaction in the system securely tied to an owner.
+     * Executes the use case to create a new transaction.
      *
-     * @param transaction the transaction object containing the  details.
-     * @param userEmail the email of the user who owns this transaction.
-     * @return the created {@link Transaction} domain object.
+     * @param transaction the domain object containing initial transaction details.
+     * @param userEmail   the email of the authenticated user who owns this transaction.
+     * @return the created {@link Transaction} domain object, including the generated ID and timestamp.
      */
     @Override
     public Transaction create(Transaction transaction, String userEmail) {

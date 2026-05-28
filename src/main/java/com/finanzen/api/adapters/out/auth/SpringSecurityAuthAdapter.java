@@ -5,6 +5,15 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Component;
 
+/**
+ * Concrete Outbound Adapter responsible for user authentication using Spring Security.
+ * <p>
+ * This class implements the {@link AuthenticationProviderPort} driven port. It bridges
+ * the application core and Spring Security's infrastructure, wrapping raw credentials
+ * into a framework-specific {@link UsernamePasswordAuthenticationToken} to trigger
+ * the formal authentication manager flow.
+ * </p>
+ */
 @Component
 public class SpringSecurityAuthAdapter implements AuthenticationProviderPort{
 
@@ -14,13 +23,19 @@ public class SpringSecurityAuthAdapter implements AuthenticationProviderPort{
         this.authenticationManager = authenticationManager;
     }
 
+    /**
+     * Bridges the application's intent to authenticate with Spring Security's native mechanism.
+     *
+     * @param email    the target user's identity email.
+     * @param password the plain-text password to validate.
+     * @throws org.springframework.security.core.AuthenticationException if authentication fails.
+     */
     @Override
     public void authenticate(String email, String password) {
-
-        // Gera token
+        //Converte o pedido do núcleo para o formato nativo do Spring Security
         var token = new UsernamePasswordAuthenticationToken(email, password);
 
-        // Autentica token
+        //Delega a validação real para o gerenciador do framework
         authenticationManager.authenticate(token);
     }
 }

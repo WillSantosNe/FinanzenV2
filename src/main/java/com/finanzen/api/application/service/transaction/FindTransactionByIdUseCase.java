@@ -6,6 +6,14 @@ import com.finanzen.api.application.ports.out.transaction.TransactionRepositoryP
 import com.finanzen.api.domain.transaction.Transaction;
 import org.springframework.stereotype.Service;
 
+/**
+ * Application Service (Use Case) for retrieving a specific transaction.
+ * <p>
+ * This service implements the {@link FindTransactionByIdPort}. It encapsulates
+ * the logic for fetching a single transaction from the persistent storage
+ * and maps any potential "not found" scenario into a domain-specific exception.
+ * </p>
+ */
 @Service
 public class FindTransactionByIdUseCase implements FindTransactionByIdPort {
 
@@ -16,11 +24,11 @@ public class FindTransactionByIdUseCase implements FindTransactionByIdPort {
     }
 
     /**
-     * Retrieves a specific transaction by its unique identifier.
+     * Executes the use case to retrieve a transaction by its unique identifier.
      *
      * @param id the unique identifier of the transaction.
-     * @return the {@link Transaction} domain object.
-     * @throws TransactionNotFoundException if no transaction is found.
+     * @return the requested {@link Transaction} domain object.
+     * @throws TransactionNotFoundException if no transaction is found in the repository.
      */
     @Override
     public Transaction findById(Long id) throws TransactionNotFoundException {

@@ -23,13 +23,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * JPA Entity representing the 'users' table in the database.
+ * Infrastructure Database Entity representing the 'users' table in the database.
  * <p>
- * This infrastructure class is responsible for the object-relational mapping
- * (ORM).
- * It dictates the physical constraints of the database schema and is never
- * leaked
- * to the core business logic.
+ * This class implements Spring Security's {@link UserDetails} interface. By hosting
+ * framework-specific security contracts exclusively inside this database entity, we prevent
+ * Spring Security dependencies from leaking into the core business domain layer.
  * </p>
  */
 @Entity(name = "User")
@@ -40,18 +38,10 @@ import lombok.Setter;
 @AllArgsConstructor
 public class JpaUserEntity implements UserDetails {
 
-    /*
-     * OBS: Anotacoes do persistence usamos nas entitys pois protegem o banco de
-     * dados.
-     * Anotacoes do validation protegem das bordas da aplicação.
-     */
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Na entity para validar unicidade usamos unique e nullable para verificar se
-    // não está vazio.
     @Column(unique = true, nullable = false)
     private String email;
 
@@ -62,33 +52,65 @@ public class JpaUserEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    /**
+     * Converts the user's role into a Spring Security granted authority.
+     *
+     * @return a collection containing the mapped {@link SimpleGrantedAuthority} prefixed with 'ROLE_'.
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + this.role.name()));
     }
 
+    /**
+     * Returns the password used to authenticate the user.
+     */
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    /**
+     * Returns the username used to authenticate the user (the email in this system).
+     */
     @Override
     public String getUsername() {
         return this.email;
     }
 
+    /**
+     * Indicates whether the user's account has expired.
+     * @return true (accounts do not expire in this system).
+     */
     @Override
     public boolean isAccountNonExpired() {
-        return true; // A conta não expira
+        return true;
     }
 
+    /**
+     * Indicates whether the user is locked or unlocked.
+     * @return true (accounts are unlocked by default).
+     */
     @Override
     public boolean isAccountNonLocked() {
-        return true; // A conta não está bloqueada
+        return true;
     }
 
+    /**
+     * Indicates whether the user's credentials (password) have expired.
+     * @return true (credentials do not expire automatically).
+     */
     @Override
     public boolean isCredentialsNonExpired() {
-        return true; // As senhas não expiram
+        return true;
     }
 
+    /**
+     * Indicates whether the user is enabled or disabled.
+     * @return true (users are enabled upon registration).
+     */
     @Override
     public boolean isEnabled() {
-        return true; // O usuário está ativado
+        return true;
     }
 }
