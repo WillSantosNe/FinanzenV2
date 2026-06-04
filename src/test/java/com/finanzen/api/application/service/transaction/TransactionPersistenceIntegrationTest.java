@@ -14,6 +14,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * End-to-end integration testing for the transaction database persistence layer.
+ * Inherits the live Docker PostgreSQL database infrastructure from BaseIntegrationTest.
+ */
 @Transactional // Limpa dos dados criados após a execução
 @DisplayName("Integration: Transaction Database Persistence Tests")
 public class TransactionPersistenceIntegrationTest extends BaseIntegrationTest {
