@@ -29,7 +29,7 @@ public class FindTransactionByIdUseCaseTest {
 
     @Test
     @DisplayName("Should return Transaction by id successfully")
-    void shoulReturnTransactionByIdSuccessfully() {
+    void shouldReturnTransactionByIdSuccessfully() {
         // Arrange
         Long id = 1L;
         Transaction mockedTransaction = new Transaction(
@@ -53,7 +53,7 @@ public class FindTransactionByIdUseCaseTest {
 
     @Test
     @DisplayName("Should throw TransactionNotFoundException")
-    void shoulThrowTransactionNotFoundException() {
+    void shouldThrowTransactionNotFoundException() {
         // Arrange
         Long id = 1L;
         when(repository.findById(id)).thenReturn(Optional.empty());
