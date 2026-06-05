@@ -1,5 +1,8 @@
 package com.finanzen.api.application.exceptions;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
 /**
  * Application-level exception thrown when a requested transaction cannot be found.
  * <p>
@@ -10,6 +13,7 @@ package com.finanzen.api.application.exceptions;
  * HTTP status (e.g., 404 Not Found) at the web boundary.
  * </p>
  */
+@ResponseStatus(HttpStatus.NOT_FOUND)
 public class TransactionNotFoundException extends RuntimeException {
 
     /**
