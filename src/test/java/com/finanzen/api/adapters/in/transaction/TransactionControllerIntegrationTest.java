@@ -52,6 +52,7 @@ public class TransactionControllerIntegrationTest extends BaseIntegrationTest {
 
 
     @Test
+    @DisplayName("Should return 404 Not Found when trying to delete a non-existing transaction")
     void shouldReturnNotFoundWhenTransactionToIdDoesNotExist() throws Exception {
         // Arrange
         Long id = 1L;
@@ -60,7 +61,27 @@ public class TransactionControllerIntegrationTest extends BaseIntegrationTest {
         mockMvc.perform(delete("/transactions/" + id)
                         .with(user("dev@finanzen.com").roles("USER"))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound()); // Valida o HTTP 404
+    }
 
+
+    @Test
+    @DisplayName("Should return 400 Bad Request when transaction amount is negative")
+    void shouldReturnBadRequestWhenAmountIsNegative() throws Exception {
+        // Arrange
+        String transactionJson = """
+                {
+                    "description": "Cadeira Ergonomica",
+                    "amount": -1200.50,
+                    "type": "EXPENSE"
+                }
+                """;
+
+        // Act & Assert
+        mockMvc.perform(post("/transactions")
+                .with(user("dev@finanzen.com").roles("USER"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(transactionJson))
+                .andExpect(status().isBadRequest()); // Valida o HTTP 400
     }
 }
