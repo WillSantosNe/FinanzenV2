@@ -9,10 +9,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 
 /**
  * End-to-end integration tests for the Transaction API endpoints.
@@ -31,12 +32,12 @@ public class TransactionControllerIntegrationTest extends BaseIntegrationTest {
     void shouldCreateTransactionViaApiSuccessfully() throws Exception {
         // Arrange
         String transactionJson = """
-            {
-                "description": "Cadeira Ergonomica",
-                "amount": 1200.50,
-                "type": "EXPENSE"
-            }
-            """;
+                {
+                    "description": "Cadeira Ergonomica",
+                    "amount": 1200.50,
+                    "type": "EXPENSE"
+                }
+                """;
 
         // Act & Assert
         mockMvc.perform(post("/transactions")
@@ -47,5 +48,19 @@ public class TransactionControllerIntegrationTest extends BaseIntegrationTest {
                 .andExpect(jsonPath("$.id").exists()) // Valida que o database gerou a chame primaria
                 .andExpect(jsonPath("$.description").value("Cadeira Ergonomica"))
                 .andExpect(jsonPath("$.amount").value(1200.50));
+    }
+
+
+    @Test
+    void shouldReturnNotFoundWhenTransactionToIdDoesNotExist() throws Exception {
+        // Arrange
+        Long id = 1L;
+
+        // Act & Assert
+        mockMvc.perform(delete("/transactions/" + id)
+                        .with(user("dev@finanzen.com").roles("USER"))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+
     }
 }
