@@ -1,5 +1,6 @@
 package com.finanzen.api.application.service.transaction;
 
+import com.finanzen.api.application.ports.out.transaction.TransactionEventPublisherPort;
 import com.finanzen.api.application.ports.out.transaction.TransactionRepositoryPort;
 import com.finanzen.api.domain.transaction.Transaction;
 import com.finanzen.api.domain.transaction.TransactionType;
@@ -25,6 +26,9 @@ public class CreateTransactionUseCaseTest {
 
     @Mock
     private TransactionRepositoryPort repository; // Cria duble de porta de saída
+
+    @Mock
+    private TransactionEventPublisherPort eventPublisher;
 
     @InjectMocks
     private CreateTransactionUseCase createTransactionUseCase; // Injeta no duble no usecase
