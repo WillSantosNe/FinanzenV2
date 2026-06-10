@@ -2,9 +2,11 @@ package com.finanzen.api.application.service.user;
 
 import com.finanzen.api.application.exceptions.DuplicateEmailException;
 import com.finanzen.api.application.ports.in.user.CreateUserPort;
+import com.finanzen.api.application.ports.out.user.UserEventPublisherPort;
 import com.finanzen.api.application.ports.out.user.UserRepositoryPort;
 import com.finanzen.api.domain.user.Role;
 import com.finanzen.api.domain.user.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,15 +19,12 @@ import org.springframework.stereotype.Service;
  * </p>
  */
 @Service
+@RequiredArgsConstructor
 public class CreateUserUseCase implements CreateUserPort {
 
     private final UserRepositoryPort repository;
     private final PasswordEncoder passwordEncoder;
-
-    public CreateUserUseCase(UserRepositoryPort repository, PasswordEncoder passwordEncoder) {
-        this.repository = repository;
-        this.passwordEncoder = passwordEncoder;
-    }
+    private final UserEventPublisherPort userEventPublisherPort;
 
     /**
      * Executes the use case to register a new user.
@@ -46,6 +45,19 @@ public class CreateUserUseCase implements CreateUserPort {
         user.setPassword(encodedPassword);
         user.setRole(Role.USER);
 
-        return repository.save(user);
+        User userSaved = repository.save(user);
+
+        // Criando objeto User sem a senha para enviar ao cluster do kafka
+        User userWithoutPassword = new User(
+                userSaved.getId(),
+                userSaved.getEmail(),
+                null,
+                user.getRole()
+        );
+
+        // Publicando evento de criacao de user
+        userEventPublisherPort.publishUserCreated(userWithoutPassword);
+
+        return userSaved;
     }
 }
