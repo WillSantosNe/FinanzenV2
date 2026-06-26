@@ -1,0 +1,32 @@
+name: Finanzen API - Continuous Integration
+
+# Gatilhos de disparo
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    # Runner
+    runs-on: ubuntu-latest
+
+    steps:
+      # Injeta o código fonte do repositório dentro do Runner
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      # Configura a JDK 17 e ativa o cache nativo do Maven
+      - name: Set up JDK 17 Environment
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      # Fornece permissão de execução ao Maven Wrapper e executa o ciclo de testes
+      - name: Build and Execute Test Suite (Unit and Integration)
+        run: |
+          chmod +x mvnw
+          ./mvnw clean test
