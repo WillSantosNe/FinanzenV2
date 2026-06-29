@@ -1,15 +1,14 @@
 
-# Sistema base
-FROM eclipse-temurin:21-jdk-alpine
-
-# Pasta de trabalho
+FROM maven:3.9-eclipse-temurin-17 AS build
 WORKDIR /app
+COPY . .
+RUN ./mvnw clean package -DskipTests
 
-# Copiando jar da máquina para o contêiner
-COPY target/api-0.0.1-SNAPSHOT.jar api.jar
 
-# Porta que o spring usa
+FROM eclipse-temurin:17-jre-jammy
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
 
-# O que o contêiner vai rodar quando ligar
-ENTRYPOINT ["java", "-jar", "api.jar"]
+# limita o heap do Java em 350MB para não estourar os 512MB da Render
+ENTRYPOINT ["java", "-Xmx350m", "-XX:+UseSerialGC", "-jar", "app.jar"]
