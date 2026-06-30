@@ -30,19 +30,33 @@ public class Account {
         return id;
     }
 
+
     public String getAccountNumber() {
         return accountNumber;
     }
 
+
     public BigDecimal getBalance() {
         return balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
     }
 
     public AccountType getAccountType() {
         return accountType;
     }
 
+    public void setAccountType(AccountType accountType) {
+        this.accountType = accountType;
+    }
+
     public String getUserEmail() {
         return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 }
