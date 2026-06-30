@@ -2,6 +2,7 @@ package com.finanzen.api.application.ports.out.account;
 
 import com.finanzen.api.application.dto.common.PageResult;
 import com.finanzen.api.domain.account.Account;
+
 import java.util.Optional;
 
 /**
@@ -51,4 +52,12 @@ public interface AccountRepositoryPort {
      * @param id the unique identifier of the account to be deleted.
      */
     void deleteById(Long id);
+
+    /**
+     * Retrieves a account by their account number.
+     *
+     * @param accountNumber the account number to search for.
+     * @return an {@link Optional} containing the account if found, or empty otherwise.
+     */
+    Optional<Account> findByAccountNumber(String accountNumber);
 }
