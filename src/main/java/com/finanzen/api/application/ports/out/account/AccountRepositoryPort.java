@@ -60,4 +60,12 @@ public interface AccountRepositoryPort {
      * @return an {@link Optional} containing the account if found, or empty otherwise.
      */
     Optional<Account> findByAccountNumber(String accountNumber);
+
+    /**
+     * Checks if a account already exists for the given number.
+     *
+     * @param accountNumber the number to check.
+     * @return true if the number is in use, false otherwise.
+     */
+    boolean existsByAccountNumber(String accountNumber);
 }
