@@ -52,6 +52,8 @@ public class SecurityConfig {
                         // Libera os endpoints de autenticaçao
                         .requestMatchers("/auth/**").permitAll()
 
+                        .requestMatchers("/error").permitAll() // para erros
+
                         // Todos os outros endpoints exigirão autenticação
                         .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
