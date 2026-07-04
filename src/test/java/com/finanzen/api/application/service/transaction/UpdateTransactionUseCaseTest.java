@@ -33,12 +33,13 @@ public class UpdateTransactionUseCaseTest {
     void shouldUpdateTransactionSucessfully(){
         // Arrange
         Long id = 1L;
+        String userEmail = "email@gmail.com";
         Transaction mockedTransaction = mock(Transaction.class);
 
-        when(findTransactionByIdPort.findById(id)).thenReturn(mockedTransaction);
+        when(findTransactionByIdPort.findById(id, userEmail)).thenReturn(mockedTransaction);
 
         // Act
-        Transaction transaction = useCase.update(id, mockedTransaction);
+        Transaction transaction = useCase.update(id, mockedTransaction, userEmail);
 
         // Assert
         assertNotNull(transaction);
@@ -51,19 +52,20 @@ public class UpdateTransactionUseCaseTest {
     void shouldThrowTransactionNotFoundException() {
         // Arrange
         Long id = 1L;
+        String userEmail = "email@gmail.com";
         Transaction mockedTransaction = mock(Transaction.class);
 
-        when(findTransactionByIdPort.findById(id)).thenThrow(
+        when(findTransactionByIdPort.findById(id, userEmail)).thenThrow(
                 new TransactionNotFoundException("Transaction not found")
         );
 
         // Act & Assert
         TransactionNotFoundException exception = assertThrows(
                 TransactionNotFoundException.class,
-                () -> useCase.update(id, mockedTransaction));
+                () -> useCase.update(id, mockedTransaction, userEmail));
 
         assertEquals("Transaction not found", exception.getMessage());
-        verify(findTransactionByIdPort, times(1)).findById(id);
+        verify(findTransactionByIdPort, times(1)).findById(id, userEmail);
         verify(repository, never()).save(mockedTransaction);
     }
 }

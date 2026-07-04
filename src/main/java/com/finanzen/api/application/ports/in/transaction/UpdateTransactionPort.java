@@ -21,5 +21,5 @@ public interface UpdateTransactionPort {
      * @return the fully updated {@link Transaction} domain object.
      * @throws TransactionNotFoundException if the ID does not exist.
      */
-    Transaction update(Long id, Transaction transaction);
+    Transaction update(Long id, Transaction transaction, String authenticatedEmail);
 }

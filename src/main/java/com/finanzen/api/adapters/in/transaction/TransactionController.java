@@ -82,8 +82,11 @@ public class TransactionController {
      * @throws com.finanzen.api.application.exceptions.TransactionNotFoundException if the ID is not found.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<TransactionGetDto> findById(@PathVariable Long id) {
-        Transaction transaction = findTransactionByIdPort.findById(id);
+    public ResponseEntity<TransactionGetDto> findById(
+           @PathVariable Long id,
+           @AuthenticationPrincipal UserDetails userDetails) {
+
+        Transaction transaction = findTransactionByIdPort.findById(id, userDetails.getUsername());
 
         TransactionGetDto transactionGetDto = new TransactionGetDto(
                 transaction.getId(),
@@ -161,10 +164,11 @@ public class TransactionController {
     @PutMapping("/{id}")
     public ResponseEntity<TransactionGetDto> update(
             @PathVariable Long id,
-            @RequestBody @Valid TransactionUpdateDto dto) {
+            @RequestBody @Valid TransactionUpdateDto dto,
+            @AuthenticationPrincipal UserDetails userDetails) {
 
         Transaction transactionFromDto = new Transaction(null, dto.description(), dto.amount(), null, dto.type(), null);
-        Transaction transaction = updateTransactionPort.update(id, transactionFromDto);
+        Transaction transaction = updateTransactionPort.update(id, transactionFromDto, userDetails.getUsername());
 
         TransactionGetDto transactionGetDto = new TransactionGetDto(
                 transaction.getId(), transaction.getDescription(), transaction.getAmount(),
@@ -180,8 +184,10 @@ public class TransactionController {
      * @return 204 No Content upon successful deletion.
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        deleteTransactionPort.delete(id);
+    public ResponseEntity<Void> delete(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        deleteTransactionPort.delete(id, userDetails.getUsername());
         return ResponseEntity.noContent().build();
     }
 }

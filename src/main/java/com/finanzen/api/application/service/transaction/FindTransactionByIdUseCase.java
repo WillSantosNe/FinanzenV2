@@ -31,8 +31,14 @@ public class FindTransactionByIdUseCase implements FindTransactionByIdPort {
      * @throws TransactionNotFoundException if no transaction is found in the repository.
      */
     @Override
-    public Transaction findById(Long id) throws TransactionNotFoundException {
-        return repository.findById(id).orElseThrow(
+    public Transaction findById(Long id, String authenticatedEmail) throws TransactionNotFoundException {
+        Transaction transaction = repository.findById(id).orElseThrow(
                 () -> new TransactionNotFoundException("Transaction with the id " + id + " not found in the system"));
+
+        if (!transaction.getUserEmail().equals(authenticatedEmail)) {
+            throw new TransactionNotFoundException("Transaction with the id " + id + " not found in the system");
+        }
+
+        return transaction;
     }
 }

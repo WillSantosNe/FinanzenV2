@@ -32,9 +32,9 @@ public class DeleteTransactionUseCase implements DeleteTransactionPort{
      * @throws TransactionNotFoundException if the ID does not exist.
      */
     @Override
-    public void delete(Long id) {
+    public void delete(Long id, String authenticatedEmail) {
         // A lógica de busca embutida no findById garante a validação antes da deleção
-        findTransactionByIdPort.findById(id);
+        findTransactionByIdPort.findById(id, authenticatedEmail);
         repository.deleteById(id);
     }
 }

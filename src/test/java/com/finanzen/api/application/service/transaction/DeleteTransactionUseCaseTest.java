@@ -32,14 +32,15 @@ public class DeleteTransactionUseCaseTest {
     void shouldDeleteTransactionSuccessfully(){
         // Arrange
         Long idDelete = 1L;
+        String userEmail = "email@gmail.com";
         Transaction mockedTransaction = mock(Transaction.class);
-        when(findTransactionByIdPort.findById(idDelete)).thenReturn(mockedTransaction);
+        when(findTransactionByIdPort.findById(idDelete, userEmail)).thenReturn(mockedTransaction);
 
         // Act
-        useCase.delete(idDelete);
+        useCase.delete(idDelete, userEmail);
 
         // Assert
-        verify(findTransactionByIdPort, times(1)).findById(idDelete);
+        verify(findTransactionByIdPort, times(1)).findById(idDelete,userEmail);
         verify(repository, times(1)).deleteById(idDelete);
     }
 
@@ -48,19 +49,20 @@ public class DeleteTransactionUseCaseTest {
     void shouldThrowTransactionNotFoundExceptionDelete(){
         // Arrange
         Long idDelete = 1L;
+        String userEmail = "email@gmail.com";
 
-        when(findTransactionByIdPort.findById(idDelete)).thenThrow(
+        when(findTransactionByIdPort.findById(idDelete, userEmail)).thenThrow(
                 new TransactionNotFoundException("Transaction not found")
         );
 
         // Act & Assert
         TransactionNotFoundException exception = assertThrows(TransactionNotFoundException.class,
-            () -> useCase.delete(idDelete)
+            () -> useCase.delete(idDelete, userEmail)
         );
 
         assertEquals("Transaction not found", exception.getMessage());   // Verificando se a mensagem é igual
 
-        verify(findTransactionByIdPort, times(1)).findById(idDelete);
+        verify(findTransactionByIdPort, times(1)).findById(idDelete, userEmail);
         verify(repository, never()).deleteById(idDelete);
     }
 }

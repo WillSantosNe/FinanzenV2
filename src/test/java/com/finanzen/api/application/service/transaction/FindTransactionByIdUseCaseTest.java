@@ -32,18 +32,19 @@ public class FindTransactionByIdUseCaseTest {
     void shouldReturnTransactionByIdSuccessfully() {
         // Arrange
         Long id = 1L;
+        String userEmail = "email@gmail.com";
         Transaction mockedTransaction = new Transaction(
                 id,
                 "Lunch",
                 new BigDecimal("30.00"),
                 LocalDateTime.now(),
                 TransactionType.EXPENSE,
-                "user@gmail.com");
+                userEmail);
 
         when(repository.findById(id)).thenReturn(Optional.of(mockedTransaction));
 
         // Act
-        Transaction transaction = useCase.findById(id);
+        Transaction transaction = useCase.findById(id, userEmail);
 
         // Assert
         assertNotNull(transaction);
@@ -56,10 +57,12 @@ public class FindTransactionByIdUseCaseTest {
     void shouldThrowTransactionNotFoundException() {
         // Arrange
         Long id = 1L;
+        String userEmail = "email@gmail.com";
+
         when(repository.findById(id)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(TransactionNotFoundException.class, () -> useCase.findById(id));
+        assertThrows(TransactionNotFoundException.class, () -> useCase.findById(id, userEmail));
         verify(repository, times(1)).findById(id);
     }
 }

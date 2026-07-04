@@ -18,8 +18,9 @@ public interface FindTransactionByIdPort {
      * Executes the use case to find a transaction by its unique identifier.
      *
      * @param id the unique identifier of the transaction to retrieve.
+     * @param authenticatedEmail the email authenticated.
      * @return the requested {@link Transaction} pure domain object.
      * @throws TransactionNotFoundException if the ID does not exist.
      */
-    Transaction findById(Long id);
+    Transaction findById(Long id, String authenticatedEmail);
 }

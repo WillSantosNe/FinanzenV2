@@ -35,8 +35,8 @@ public class UpdateTransactionUseCase implements UpdateTransactionPort {
      * @throws TransactionNotFoundException if the ID does not exist.
      */
     @Override
-    public Transaction update(Long id, Transaction transaction) {
-        Transaction transactionFind = findTransactionByIdPort.findById(id);
+    public Transaction update(Long id, Transaction transaction, String authenticatedEmail) {
+        Transaction transactionFind = findTransactionByIdPort.findById(id, authenticatedEmail);
 
         transactionFind.setDescription(transaction.getDescription());
         transactionFind.setAmount(transaction.getAmount());

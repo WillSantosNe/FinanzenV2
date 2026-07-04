@@ -18,5 +18,5 @@ public interface DeleteTransactionPort {
      * @param id the unique identifier of the transaction to be removed.
      * @throws TransactionNotFoundException if the transaction does not exist prior to deletion.
      */
-    void delete(Long id);
+    void delete(Long id, String authenticatedEmail);
 }
