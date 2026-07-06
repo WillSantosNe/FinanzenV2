@@ -22,10 +22,9 @@ public class AccountRepository implements AccountRepositoryPort {
         return AccountMapper.toDomain(savEntity);
     }
 
-    //todo
     @Override
     public Optional<Account> findById(Long id) {
-        return Optional.empty();
+        return repository.findById(id).map(AccountMapper::toDomain);
     }
 
     //todo
