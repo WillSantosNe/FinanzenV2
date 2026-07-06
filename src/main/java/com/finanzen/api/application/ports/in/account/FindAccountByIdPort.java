@@ -7,7 +7,8 @@ public interface FindAccountByIdPort {
      * Executes the use case to find a account by its unique identifier.
      *
      * @param id the unique identifier of the account to retrieve.
+     * @param authenticatedEmail the user email.
      * @return the requested {@link Account} pure domain object.
      */
-    Account findById(Long id);
+    Account findById(Long id, String authenticatedEmail);
 }
