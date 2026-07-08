@@ -10,7 +10,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,10 +51,9 @@ public class AccountRepository implements AccountRepositoryPort {
         return new PageResult<>(accounts, springPage.getNumber(),  springPage.getTotalElements(), springPage.getTotalPages());
     }
 
-    //todo
     @Override
     public void deleteById(Long id) {
-
+        repository.deleteById(id);
     }
 
     //todo

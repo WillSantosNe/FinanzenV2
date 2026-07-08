@@ -4,6 +4,7 @@ import com.finanzen.api.adapters.in.account.dto.AccountCreateDto;
 import com.finanzen.api.adapters.in.account.dto.AccountGetDto;
 import com.finanzen.api.application.dto.common.PageResult;
 import com.finanzen.api.application.ports.in.account.CreateAccountPort;
+import com.finanzen.api.application.ports.in.account.DeleteAccountPort;
 import com.finanzen.api.application.ports.in.account.FindAccountByIdPort;
 import com.finanzen.api.application.ports.in.account.FindAllAccountsPort;
 import com.finanzen.api.domain.account.Account;
@@ -26,6 +27,7 @@ public class AccountController {
     private final CreateAccountPort createAccountPort;
     private final FindAccountByIdPort findAccountByIdPort;
     private final FindAllAccountsPort findAllAccountsPort;
+    private final DeleteAccountPort deleteAccountPort;
 
     @PostMapping
     public ResponseEntity<AccountGetDto> create(
@@ -116,5 +118,14 @@ public class AccountController {
                 )).toList();
 
         return ResponseEntity.ok(new PageResult<>(dtos, domainPage.currentPage(), domainPage.totalItems(), domainPage.totalPages()));
+    }
+
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        deleteAccountPort.delete(id, userDetails.getUsername());
+        return ResponseEntity.noContent().build();
     }
 }
