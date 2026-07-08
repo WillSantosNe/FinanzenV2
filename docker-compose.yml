@@ -23,13 +23,13 @@ services:
       - finanzen-db
       - kafka
     environment:
-      # Usando o serviço de banco de dados
-      SPRING_DATASOURCE_URL: jdbc:postgresql://finanzen-db:5432/finanzen_db
-      SPRING_DATASOURCE_USERNAME: admin
-      SPRING_DATASOURCE_PASSWORD: password123
-      API_SECURITY_TOKEN_SECRET: finanzen-secretkey
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
-  # Kafka
+      DB_URL: jdbc:postgresql://finanzen-db:5432/finanzen_db
+      DB_USERNAME: admin
+      DB_PASSWORD: password123
+      JWT_SECRET: finanzen-secretkey
+      KAFKA_SERVERS: kafka:29092
+
+  # Kafka (Motor de Mensageria)
   kafka:
     image: confluentinc/cp-kafka:7.6.0
     container_name: finanzen-kafka
@@ -47,10 +47,9 @@ services:
       KAFKA_OFFERS_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
       CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
       KAFKA_LOG_DIRS: '/tmp/kraft-combined-logs'
-
-      # Local
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+
 volumes:
   pgdata:
