@@ -19,8 +19,14 @@ public class CreateAccountUseCase implements CreateAccountPort {
             throw new DuplicateAccountNumberException("The account number is already in use.");
         }
 
-        account.setUserEmail(userEmail);
+        Account accountToSave = new Account(
+                null,
+                account.getAccountNumber(),
+                account.getBalance(),
+                account.getAccountType(),
+                userEmail
+        );
 
-        return repositoryPort.save(account);
+        return repositoryPort.save(accountToSave);
     }
 }
