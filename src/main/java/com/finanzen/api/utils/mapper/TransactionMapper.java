@@ -30,7 +30,8 @@ public class TransactionMapper {
                 entity.getAmount(),
                 entity.getCreatedAt(),
                 entity.getType(),
-                entity.getUserEmail()
+                entity.getUserEmail(),
+                entity.getAccountId()
         );
     }
 
@@ -52,7 +53,8 @@ public class TransactionMapper {
                 domain.getAmount(),
                 domain.getCreatedAt(),
                 domain.getType(),
-                domain.getUserEmail()
+                domain.getUserEmail(),
+                domain.getAccountId()
         );
     }
 }

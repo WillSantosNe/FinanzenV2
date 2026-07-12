@@ -22,5 +22,8 @@ public record TransactionCreateDto(
         BigDecimal amount,
 
         @NotNull(message = "Transaction type is required (INCOME or EXPENSE)")
-        TransactionType type
+        TransactionType type,
+
+        @NotNull(message = "Account ID cannot be blank")
+        Long accountId
 ) {}

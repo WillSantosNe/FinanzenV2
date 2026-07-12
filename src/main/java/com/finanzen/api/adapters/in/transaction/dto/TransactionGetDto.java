@@ -15,6 +15,8 @@ public record TransactionGetDto(
         TransactionType type,
 
         @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+
+        Long accountId
 ) {
 }

@@ -22,6 +22,7 @@ public class Transaction {
     private LocalDateTime createdAt;
     private TransactionType type;
     private String userEmail;
+    private Long accountId;
 
     /**
      * Constructs a new Transaction and enforces initial business invariants.
@@ -32,10 +33,10 @@ public class Transaction {
      * @param createdAt   the exact timestamp when the transaction occurred or was registered.
      * @param type        the classification of the transaction (e.g., INCOME, EXPENSE).
      * @param userEmail   the email of the user who owns this transaction.
+     * @param accountId   the id of the account who owns this transaction.
      * @throws IllegalArgumentException if the provided amount is zero or negative.
      */
-    public Transaction(Long id, String description, BigDecimal amount, LocalDateTime createdAt, TransactionType type, String userEmail) {
-        // Regra de Negócio Pura e Isolada!
+    public Transaction(Long id, String description, BigDecimal amount, LocalDateTime createdAt, TransactionType type, String userEmail, Long accountId) {
         if (amount != null && amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("The transaction amount must be greater than zero.");
         }
@@ -46,6 +47,7 @@ public class Transaction {
         this.createdAt = createdAt;
         this.type = type;
         this.userEmail = userEmail;
+        this.accountId = accountId;
     }
 
     public Long getId() {
@@ -94,6 +96,10 @@ public class Transaction {
 
     public void setUserEmail(String userEmail) {
         this.userEmail = userEmail;
+    }
+
+    public Long getAccountId() {
+        return accountId;
     }
 
     @Override

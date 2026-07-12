@@ -60,7 +60,8 @@ public class TransactionController {
                 dto.amount(),
                 null,
                 dto.type(),
-                null);
+                null,
+                dto.accountId());
 
         Transaction transaction = createTransactionPort.create(transactionFromDto, userDetails.getUsername());
 
@@ -69,7 +70,8 @@ public class TransactionController {
                 transaction.getDescription(),
                 transaction.getAmount(),
                 transaction.getType(),
-                transaction.getCreatedAt());
+                transaction.getCreatedAt(),
+                transaction.getAccountId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(transactionGetDto);
     }
@@ -93,7 +95,8 @@ public class TransactionController {
                 transaction.getDescription(),
                 transaction.getAmount(),
                 transaction.getType(),
-                transaction.getCreatedAt());
+                transaction.getCreatedAt(),
+                transaction.getAccountId());
 
         return ResponseEntity.ok(transactionGetDto);
     }
@@ -119,7 +122,8 @@ public class TransactionController {
                         transaction.getDescription(),
                         transaction.getAmount(),
                         transaction.getType(),
-                        transaction.getCreatedAt()
+                        transaction.getCreatedAt(),
+                        transaction.getAccountId()
                 )).toList();
 
         return ResponseEntity.ok(new PageResult<>(dtos, domainPage.currentPage(), domainPage.totalItems(), domainPage.totalPages()));
@@ -148,7 +152,8 @@ public class TransactionController {
                         transaction.getDescription(),
                         transaction.getAmount(),
                         transaction.getType(),
-                        transaction.getCreatedAt()
+                        transaction.getCreatedAt(),
+                        transaction.getAccountId()
                 )).toList();
 
         return ResponseEntity.ok(new PageResult<>(dtos, domainPage.currentPage(), domainPage.totalItems(), domainPage.totalPages()));
@@ -167,12 +172,12 @@ public class TransactionController {
             @RequestBody @Valid TransactionUpdateDto dto,
             @AuthenticationPrincipal UserDetails userDetails) {
 
-        Transaction transactionFromDto = new Transaction(null, dto.description(), dto.amount(), null, dto.type(), null);
+        Transaction transactionFromDto = new Transaction(null, dto.description(), dto.amount(), null, dto.type(), null, null);
         Transaction transaction = updateTransactionPort.update(id, transactionFromDto, userDetails.getUsername());
 
         TransactionGetDto transactionGetDto = new TransactionGetDto(
                 transaction.getId(), transaction.getDescription(), transaction.getAmount(),
-                transaction.getType(), transaction.getCreatedAt());
+                transaction.getType(), transaction.getCreatedAt(), transaction.getAccountId());
 
         return ResponseEntity.ok(transactionGetDto);
     }

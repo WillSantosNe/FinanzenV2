@@ -2,15 +2,10 @@ package com.finanzen.api.adapters.out.transaction;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+
+import com.finanzen.api.adapters.out.account.JpaAccountEntity;
 import com.finanzen.api.domain.transaction.TransactionType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -47,4 +42,7 @@ public class JpaTransactionEntity {
 
     @Column(name = "user_email")
     private String userEmail;
+
+    @Column(name = "account_id")
+    private Long accountId;
 }
