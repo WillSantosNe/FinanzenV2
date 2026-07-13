@@ -39,7 +39,8 @@ public class FindTransactionByIdUseCaseTest {
                 new BigDecimal("30.00"),
                 LocalDateTime.now(),
                 TransactionType.EXPENSE,
-                userEmail);
+                userEmail,
+                1L);
 
         when(repository.findById(id)).thenReturn(Optional.of(mockedTransaction));
 

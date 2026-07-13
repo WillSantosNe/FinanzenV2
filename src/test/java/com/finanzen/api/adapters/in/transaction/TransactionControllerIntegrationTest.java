@@ -1,11 +1,16 @@
 package com.finanzen.api.adapters.in.transaction;
 
 import com.finanzen.api.BaseIntegrationTest;
+import com.finanzen.api.application.ports.out.account.AccountRepositoryPort;
+import com.finanzen.api.application.ports.out.transaction.TransactionEventPublisherPort;
+import com.finanzen.api.domain.account.Account;
+import com.finanzen.api.domain.account.AccountType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,25 +32,42 @@ public class TransactionControllerIntegrationTest extends BaseIntegrationTest {
     @Autowired
     private MockMvc mockMvc; // Emulando uma requisicao HTTP
 
+    @Autowired
+    private AccountRepositoryPort accountRepository;
+
+    @MockitoBean
+    private TransactionEventPublisherPort eventPublisher;
+
     @Test
     @DisplayName("Should create a transaction via HTTP API and persist it in PostgreSQL")
     void shouldCreateTransactionViaApiSuccessfully() throws Exception {
-        // Arrange
+        // Arrange - Criar uma conta real no banco de dados do Docker antes de transacionar
+        Account testAccount = new Account(
+                null,
+                "123456",
+                new java.math.BigDecimal("2000.00"),
+                AccountType.CHECKING,
+                "dev@finanzen.com"
+        );
+        Account savedAccount = accountRepository.save(testAccount);
+
+        // Injetar o ID real gerado pelo banco de dados no payload do JSON
         String transactionJson = """
                 {
                     "description": "Cadeira Ergonomica",
                     "amount": 1200.50,
-                    "type": "EXPENSE"
+                    "type": "EXPENSE",
+                    "accountId" : %d
                 }
-                """;
+                """.formatted(savedAccount.getId());
 
         // Act & Assert
         mockMvc.perform(post("/transactions")
-                        .with(user("dev@finanzen.com").roles("USER")) // SpringSecutiry injeta o usuario mockado como USER
+                        .with(user("dev@finanzen.com").roles("USER"))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(transactionJson)) // Conteúdo JSON
-                .andExpect(status().isCreated()) // Valida código HTTP 201
-                .andExpect(jsonPath("$.id").exists()) // Valida que o database gerou a chame primaria
+                        .content(transactionJson))
+                .andExpect(status().isCreated()) // 201
+                .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.description").value("Cadeira Ergonomica"))
                 .andExpect(jsonPath("$.amount").value(1200.50));
     }
@@ -73,7 +95,8 @@ public class TransactionControllerIntegrationTest extends BaseIntegrationTest {
                 {
                     "description": "Cadeira Ergonomica",
                     "amount": -1200.50,
-                    "type": "EXPENSE"
+                    "type": "EXPENSE",
+                    "accountId" : 1
                 }
                 """;
 

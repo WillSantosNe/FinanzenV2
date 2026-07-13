@@ -1,7 +1,11 @@
 package com.finanzen.api.application.service.transaction;
 
+import com.finanzen.api.application.ports.in.account.FindAccountByIdPort;
+import com.finanzen.api.application.ports.in.account.UpdateAccountBalancePort;
 import com.finanzen.api.application.ports.out.transaction.TransactionEventPublisherPort;
 import com.finanzen.api.application.ports.out.transaction.TransactionRepositoryPort;
+import com.finanzen.api.domain.account.Account;
+import com.finanzen.api.domain.account.AccountType;
 import com.finanzen.api.domain.transaction.Transaction;
 import com.finanzen.api.domain.transaction.TransactionType;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -30,6 +35,12 @@ public class CreateTransactionUseCaseTest {
     @Mock
     private TransactionEventPublisherPort eventPublisher;
 
+    @Mock
+    private FindAccountByIdPort findAccountByIdPort;
+
+    @Mock
+    private UpdateAccountBalancePort updateAccountBalancePort;
+
     @InjectMocks
     private CreateTransactionUseCase createTransactionUseCase; // Injeta no duble no usecase
 
@@ -37,7 +48,7 @@ public class CreateTransactionUseCaseTest {
 
     @BeforeEach // Vai rodar antes de cada @Test
     void setUp(){
-        inputTransaction = new Transaction(null, "Freelance Dev", new BigDecimal("3500.00"), null, TransactionType.INCOME, null);
+        inputTransaction = new Transaction(null, "Freelance Dev", new BigDecimal("3500.00"), null, TransactionType.INCOME, null, 1L);
     }
 
     @Test
@@ -45,14 +56,26 @@ public class CreateTransactionUseCaseTest {
     void shouldCreateTransactionSuccessfully() {
         // Arrange
         String userEmail = "willi@gmail.com";
+        Long accountId = 1L;
+
+        Account mockAccount = new Account(
+                accountId, "123456", new BigDecimal("1000.00"), AccountType.CHECKING, userEmail
+        );
+
         Transaction mockSavedTransaction = new Transaction(
                 99L,
                 inputTransaction.getDescription(),
                 inputTransaction.getAmount(),
                 LocalDateTime.now(),
                 inputTransaction.getType(),
-                userEmail
+                userEmail,
+                accountId
         );
+
+        when(findAccountByIdPort.findById(accountId, userEmail)).thenReturn(mockAccount);
+
+        when(updateAccountBalancePort.execute(eq(accountId), any(BigDecimal.class), eq(userEmail)))
+                .thenReturn(mockAccount);
 
         // mock devolve a transacao com ID
         when(repository.save(any(Transaction.class))).thenReturn(mockSavedTransaction);
@@ -66,7 +89,9 @@ public class CreateTransactionUseCaseTest {
         assertEquals(userEmail, result.getUserEmail());
         assertNotNull(result.getCreatedAt());
 
-        // garantindo que a porta de saída foi executada somente 1 vez
+        // Garantindo que as portas de integração e persistência foram acionadas
+        verify(findAccountByIdPort, times(1)).findById(accountId, userEmail);
+        verify(updateAccountBalancePort, times(1)).execute(eq(accountId), any(BigDecimal.class), eq(userEmail));
         verify(repository, times(1)).save(any(Transaction.class));
     }
 }

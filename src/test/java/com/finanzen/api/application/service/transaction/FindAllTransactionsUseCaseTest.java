@@ -42,7 +42,8 @@ public class FindAllTransactionsUseCaseTest {
                 new BigDecimal("30.00"),
                 LocalDateTime.now(),
                 TransactionType.EXPENSE,
-                "user@gmail.com");
+                "user@gmail.com",
+                1L);
 
         PageResult<Transaction> mockPageResult = new PageResult<>(List.of(mockedTransaction), page, 1, 1);
 
@@ -76,7 +77,8 @@ public class FindAllTransactionsUseCaseTest {
                 new BigDecimal("10000.00"),
                 LocalDateTime.now(),
                 TransactionType.INCOME,
-                userEmail
+                userEmail,
+                1L
         );
 
         PageResult<Transaction> mockPageResult = new PageResult<>(List.of(mockedTransaction), page, 1, 1);

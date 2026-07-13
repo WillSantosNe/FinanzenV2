@@ -21,9 +21,10 @@ public class TransactionTest {
         LocalDateTime createdAt = LocalDateTime.now();
         TransactionType type = TransactionType.INCOME;
         String userEmail = "test@gmail.com";
+        Long accountId = 1L;
 
         // Act - execucao
-        Transaction transaction = new Transaction(id, description, amount, createdAt, type, userEmail);
+        Transaction transaction = new Transaction(id, description, amount, createdAt, type, userEmail, accountId);
 
         // Assert - verificacao
         assertNotNull(transaction);
@@ -33,6 +34,7 @@ public class TransactionTest {
         assertEquals(createdAt, transaction.getCreatedAt());
         assertEquals(type, transaction.getType());
         assertEquals(userEmail, transaction.getUserEmail());
+        assertEquals(accountId, transaction.getAccountId());
 
     }
 
@@ -44,7 +46,7 @@ public class TransactionTest {
 
         // Act & Assert
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            new Transaction(1L, "Lanche", zeroAmount, LocalDateTime.now(), TransactionType.EXPENSE, "willi@gmail.com");
+            new Transaction(1L, "Lanche", zeroAmount, LocalDateTime.now(), TransactionType.EXPENSE, "willi@gmail.com", 1L);
         });
 
         // Garante que a mensagem de erro da exceção é exatamente a que definimos no domínio
@@ -59,7 +61,7 @@ public class TransactionTest {
 
         // Act & Assert
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            new Transaction(1L, "Uber", negativeAmount, LocalDateTime.now(), TransactionType.EXPENSE, "willi@gmail.com");
+            new Transaction(1L, "Uber", negativeAmount, LocalDateTime.now(), TransactionType.EXPENSE, "willi@gmail.com", 1L);
         });
 
         assertEquals("The transaction amount must be greater than zero.", exception.getMessage());

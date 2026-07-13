@@ -35,7 +35,8 @@ public class TransactionPersistenceIntegrationTest extends BaseIntegrationTest {
                 new BigDecimal("1500.00"),
                 LocalDateTime.now(),
                 TransactionType.EXPENSE,
-                "dev@finanzen.com"
+                "dev@finanzen.com",
+                1L
         );
 
         // Act

@@ -16,8 +16,8 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@EmbeddedKafka(partitions = 1, topics = {"transaction-created"}) // 🌟 Sobe um Kafka em memória e cria o tópico automaticamente
-@ExtendWith(OutputCaptureExtension.class) // 🌟 Permite interceptar os logs do console da aplicação
+@EmbeddedKafka(partitions = 1, topics = {"transaction-created"})
+@ExtendWith(OutputCaptureExtension.class)
 @Transactional
 @DisplayName("Kafka Consumer - transaction-created")
 public class ConsumerTransactionCreatedKafkaTest extends BaseIntegrationTest {
