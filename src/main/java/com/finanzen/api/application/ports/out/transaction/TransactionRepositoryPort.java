@@ -61,4 +61,13 @@ public interface TransactionRepositoryPort {
      * @param id the unique identifier of the transaction to be removed.
      */
     void deleteById(Long id);
+
+
+    boolean existsDuplicateRecentTransaction(
+            Long accountId,
+            java.math.BigDecimal amount,
+            String description,
+            com.finanzen.api.domain.transaction.TransactionType type,
+            java.time.LocalDateTime limitTime
+    );
 }

@@ -24,4 +24,12 @@ public interface JpaTransactionRepository extends JpaRepository<JpaTransactionEn
      * @return a {@link Page} of database entities.
      */
     Page<JpaTransactionEntity> findAllByUserEmail(String userEmail, Pageable pageable);
+
+    boolean existsByAccountIdAndAmountAndDescriptionAndTypeAndCreatedAtGreaterThanEqual(
+            Long accountId,
+            java.math.BigDecimal amount,
+            String description,
+            com.finanzen.api.domain.transaction.TransactionType type,
+            java.time.LocalDateTime limitTime
+    );
 }

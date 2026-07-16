@@ -1,9 +1,12 @@
 package com.finanzen.api.adapters.out.transaction;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import com.finanzen.api.application.dto.common.PageResult;
 import com.finanzen.api.application.ports.out.transaction.TransactionRepositoryPort;
+import com.finanzen.api.domain.transaction.TransactionType;
 import com.finanzen.api.utils.mapper.TransactionMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -132,5 +135,10 @@ public class TransactionRepository implements TransactionRepositoryPort {
     @Override
     public void deleteById(Long id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    public boolean existsDuplicateRecentTransaction(Long accountId, BigDecimal amount, String description, TransactionType type, LocalDateTime limitTime) {
+        return repository.existsByAccountIdAndAmountAndDescriptionAndTypeAndCreatedAtGreaterThanEqual(accountId, amount, description, type, limitTime);
     }
 }
