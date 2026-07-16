@@ -1,5 +1,6 @@
 package com.finanzen.api.application.service.transaction;
 
+import com.finanzen.api.application.exceptions.BusinessException;
 import com.finanzen.api.application.ports.in.account.FindAccountByIdPort;
 import com.finanzen.api.application.ports.in.account.UpdateAccountBalancePort;
 import com.finanzen.api.application.ports.in.transaction.CreateTransactionPort;
@@ -44,8 +45,25 @@ public class CreateTransactionUseCase implements CreateTransactionPort {
     @Override
     @Transactional // Integridade, se o banco falhar nao publica no kafka
     public Transaction create(Transaction transaction, String userEmail) {
-        transaction.setCreatedAt(LocalDateTime.now());
+        LocalDateTime now = LocalDateTime.now();
+        transaction.setCreatedAt(now);
         transaction.setUserEmail(userEmail);
+
+        // Colocando limite de idempotencia
+        LocalDateTime limitTime = now.minusSeconds(5);
+
+        boolean isDuplicate = repository.existsDuplicateRecentTransaction(
+                transaction.getAccountId(),
+                transaction.getAmount(),
+                transaction.getDescription(),
+                transaction.getType(),
+                limitTime
+        );
+
+        if (isDuplicate) {
+
+            throw  new BusinessException("Transaction already exists");
+        }
 
         // Verifica se conta existe
         findAccountByIdPort.findById(transaction.getAccountId(), userEmail);
