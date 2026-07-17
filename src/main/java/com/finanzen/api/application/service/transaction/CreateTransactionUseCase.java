@@ -33,7 +33,7 @@ public class CreateTransactionUseCase implements CreateTransactionPort {
     private final TransactionRepositoryPort repository;
     private final TransactionEventPublisherPort eventPublisher;
     private final FindAccountByIdPort findAccountByIdPort;
-    private final UpdateAccountBalancePort  updateAccountBalancePort;
+    //private final UpdateAccountBalancePort  updateAccountBalancePort;
 
     /**
      * Executes the use case to create a new transaction.
@@ -74,7 +74,7 @@ public class CreateTransactionUseCase implements CreateTransactionPort {
                 : transaction.getAmount();
 
         // Muda saldo da conta
-        Account account = updateAccountBalancePort.execute(transaction.getAccountId(), balanceDelta, userEmail);
+        //Account account = updateAccountBalancePort.execute(transaction.getAccountId(), balanceDelta, userEmail);
 
         // Salva transaction
         Transaction savedTransaction = repository.save(transaction);
