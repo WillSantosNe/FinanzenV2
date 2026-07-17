@@ -16,17 +16,17 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@EmbeddedKafka(partitions = 1, topics = {"transaction-created"})
+@EmbeddedKafka(partitions = 1, topics = {"transaction-events"})
 @ExtendWith(OutputCaptureExtension.class)
 @Transactional
-@DisplayName("Kafka Consumer - transaction-created")
+@DisplayName("Kafka Consumer - transaction-events")
 public class ConsumerTransactionCreatedKafkaTest extends BaseIntegrationTest {
 
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
 
     @Test
-    @DisplayName("Should consume transaction-created event and trigger email simulation logs")
+    @DisplayName("Should consume transaction-events event and trigger email simulation logs")
     void shouldConsumeEventAndLogEmailNotification(CapturedOutput output) {
         // Arrange
         String transactionJson = """
@@ -40,7 +40,7 @@ public class ConsumerTransactionCreatedKafkaTest extends BaseIntegrationTest {
                 """;
 
         // Act
-        kafkaTemplate.send("transaction-created", "999", transactionJson);
+        kafkaTemplate.send("transaction-events", "999", transactionJson);
 
         // Assert
         Awaitility.await()
