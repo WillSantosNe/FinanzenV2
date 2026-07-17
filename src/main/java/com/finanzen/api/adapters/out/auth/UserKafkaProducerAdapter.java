@@ -13,7 +13,7 @@ public class UserKafkaProducerAdapter implements UserEventPublisherPort {
 
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ObjectMapper objectMapper;
-    private static final String TOPIC = "user-created";
+    private static final String TOPIC = "user-events";
 
     @Override
     public void publishUserCreated(User user) {

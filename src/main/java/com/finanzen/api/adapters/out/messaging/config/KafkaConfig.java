@@ -22,4 +22,10 @@ public class KafkaConfig {
         TopicBuilder topicBuilder = TopicBuilder.name("transaction-events");
         return topicBuilder.partitions(1).replicas(1).build();
     }
+
+    @Bean
+    public NewTopic userEventsTopic() {
+        TopicBuilder topicBuilder = TopicBuilder.name("user-events");
+        return topicBuilder.partitions(1).replicas(1).build();
+    }
 }

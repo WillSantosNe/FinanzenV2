@@ -12,7 +12,7 @@ public class UserKafkaConsumerAdapter {
 
     private final ObjectMapper objectMapper;
 
-    @KafkaListener(topics = "user-created", groupId = "finanzen-group")
+    @KafkaListener(topics = "user-events", groupId = "finanzen-group")
     public void consumeUserCreated(String payload){
         try{
             User user = objectMapper.readValue(payload, User.class);
