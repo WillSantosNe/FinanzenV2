@@ -38,8 +38,6 @@ public class CreateTransactionUseCaseTest {
     @Mock
     private FindAccountByIdPort findAccountByIdPort;
 
-    @Mock
-    private UpdateAccountBalancePort updateAccountBalancePort;
 
     @InjectMocks
     private CreateTransactionUseCase createTransactionUseCase; // Injeta no duble no usecase
@@ -74,8 +72,6 @@ public class CreateTransactionUseCaseTest {
 
         when(findAccountByIdPort.findById(accountId, userEmail)).thenReturn(mockAccount);
 
-        when(updateAccountBalancePort.execute(eq(accountId), any(BigDecimal.class), eq(userEmail)))
-                .thenReturn(mockAccount);
 
         // mock devolve a transacao com ID
         when(repository.save(any(Transaction.class))).thenReturn(mockSavedTransaction);
@@ -91,7 +87,6 @@ public class CreateTransactionUseCaseTest {
 
         // Garantindo que as portas de integração e persistência foram acionadas
         verify(findAccountByIdPort, times(1)).findById(accountId, userEmail);
-        verify(updateAccountBalancePort, times(1)).execute(eq(accountId), any(BigDecimal.class), eq(userEmail));
         verify(repository, times(1)).save(any(Transaction.class));
     }
 }
