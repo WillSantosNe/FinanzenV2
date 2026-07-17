@@ -13,7 +13,7 @@ public class TransactionKafkaConsumerAdapter {
 
     private final ObjectMapper objectMapper;
 
-    @KafkaListener(topics = "transaction-created", groupId = "finanzen-group")
+    @KafkaListener(topics = "transaction-events", groupId = "finanzen-group")
     public void consumeTransactionCreated(String payload){
         try {
             Transaction transaction = objectMapper.readValue(payload, Transaction.class);

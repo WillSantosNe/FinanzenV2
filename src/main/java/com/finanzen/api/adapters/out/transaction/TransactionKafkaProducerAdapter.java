@@ -13,7 +13,7 @@ public class TransactionKafkaProducerAdapter implements TransactionEventPublishe
 
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ObjectMapper objectMapper;
-    private static final String TOPIC = "transaction-created";
+    private static final String TOPIC = "transaction-events";
 
     @Override
     public void publishTransactionCreated(Transaction transaction) {
