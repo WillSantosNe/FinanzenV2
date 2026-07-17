@@ -33,7 +33,6 @@ public class CreateTransactionUseCase implements CreateTransactionPort {
     private final TransactionRepositoryPort repository;
     private final TransactionEventPublisherPort eventPublisher;
     private final FindAccountByIdPort findAccountByIdPort;
-    //private final UpdateAccountBalancePort  updateAccountBalancePort;
 
     /**
      * Executes the use case to create a new transaction.
@@ -66,15 +65,14 @@ public class CreateTransactionUseCase implements CreateTransactionPort {
         }
 
         // Verifica se conta existe
-        findAccountByIdPort.findById(transaction.getAccountId(), userEmail);
+        Account account = findAccountByIdPort.findById(transaction.getAccountId(), userEmail);
 
-        // Calculo do delta
-        BigDecimal balanceDelta = transaction.getType() == TransactionType.EXPENSE
-                ? transaction.getAmount().negate()
-                : transaction.getAmount();
 
-        // Muda saldo da conta
-        //Account account = updateAccountBalancePort.execute(transaction.getAccountId(), balanceDelta, userEmail);
+        if (transaction.getType() == TransactionType.EXPENSE) {
+            if (account.getBalance().compareTo(transaction.getAmount()) < 0) {
+                throw new BusinessException("Insufficient funds for this operation");
+            }
+        }
 
         // Salva transaction
         Transaction savedTransaction = repository.save(transaction);
