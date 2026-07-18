@@ -1,13 +1,12 @@
 package com.finanzen.api.adapters.out.transaction;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.finanzen.api.application.ports.out.OutboxRepositoryPort;
+import com.finanzen.api.application.ports.out.outbox.OutboxRepositoryPort;
 import com.finanzen.api.application.ports.out.transaction.TransactionEventPublisherPort;
 import com.finanzen.api.domain.outbox.AggregateType;
 import com.finanzen.api.domain.outbox.EventType;
 import com.finanzen.api.domain.outbox.OutboxEvent;
 import com.finanzen.api.domain.transaction.Transaction;
-import com.finanzen.api.utils.mapper.OutboxMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
