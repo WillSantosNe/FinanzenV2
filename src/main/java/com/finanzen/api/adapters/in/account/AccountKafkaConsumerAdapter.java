@@ -33,7 +33,7 @@ public class AccountKafkaConsumerAdapter {
                     + " | Balance: " + account.getBalance());
         }
         catch (Exception e) {
-            System.out.println("Error while deserializing or processing transaction event from Kafka - " + e);
+            throw new RuntimeException("Error processing transaction event", e);
         }
     }
 }
