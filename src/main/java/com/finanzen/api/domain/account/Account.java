@@ -2,6 +2,7 @@ package com.finanzen.api.domain.account;
 
 import com.finanzen.api.application.exceptions.BusinessException;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -12,7 +13,7 @@ import java.math.BigDecimal;
  * framework or persistence annotations (JPA/Spring).
  * </p>
  */
-public class Account {
+public class Account implements Serializable {
     private Long id;
     private final String accountNumber;
     private BigDecimal balance;

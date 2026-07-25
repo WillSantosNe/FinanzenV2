@@ -4,9 +4,11 @@ import com.finanzen.api.application.ports.in.account.FindAccountByIdPort;
 import com.finanzen.api.application.ports.in.account.UpdateAccountBalancePort;
 import com.finanzen.api.application.ports.out.account.AccountRepositoryPort;
 import com.finanzen.api.domain.account.Account;
-import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 
 /**
  * Application Service orchestrating the balance update operations.
@@ -24,6 +26,7 @@ public class UpdateAccountBalanceUseCase implements UpdateAccountBalancePort {
     private final FindAccountByIdPort findAccountByIdPort;
 
     @Override
+    @CacheEvict(value = "accounts", key = "#id")
     public Account execute(Long id, BigDecimal amountDelta, String authenticatedEmail) {
         Account account = findAccountByIdPort.findById(id, authenticatedEmail);
 
