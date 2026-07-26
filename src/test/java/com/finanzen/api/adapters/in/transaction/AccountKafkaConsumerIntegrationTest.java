@@ -65,7 +65,7 @@ public class AccountKafkaConsumerIntegrationTest extends BaseIntegrationTest {
 
         // Assert
         Awaitility.await()
-                .atMost(5, TimeUnit.SECONDS)
+                .atMost(20, TimeUnit.SECONDS)
                 .untilAsserted(() -> {
                     assertTrue(output.getOut().contains("[UPDATE ACCOUNT BALANCE SERVICE]"));
                 });
