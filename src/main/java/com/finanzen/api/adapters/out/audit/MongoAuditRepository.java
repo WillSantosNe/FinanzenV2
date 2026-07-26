@@ -1,4 +1,6 @@
 package com.finanzen.api.adapters.out.audit;
 
-public interface MongoAuditRepository {
+import org.springframework.data.mongodb.repository.MongoRepository;
+
+public interface MongoAuditRepository extends MongoRepository<AuditLogEntity, String> {
 }
