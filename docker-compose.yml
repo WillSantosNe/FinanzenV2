@@ -57,5 +57,11 @@ services:
     container_name: finanzen-redis
     ports:
       - "6379:6379"
+
+  mongo:
+    image: mongo:7.0
+    container_name: finanzen-mongo
+    ports:
+      - "27017:27017"
 volumes:
   pgdata:
