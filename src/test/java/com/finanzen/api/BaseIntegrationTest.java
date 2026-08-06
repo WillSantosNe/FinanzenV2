@@ -55,8 +55,8 @@ public abstract class BaseIntegrationTest { // Classe abstrata para subir o cont
     @Container
     public static MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:7.0"));
 
-    @DynamicPropertySource
-    static void mongoProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
-    }
+//    @DynamicPropertySource
+//    static void mongoProperties(DynamicPropertyRegistry registry) {
+//        registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
+//    }
 }
