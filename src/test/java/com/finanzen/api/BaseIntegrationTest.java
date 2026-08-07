@@ -5,6 +5,7 @@ package com.finanzen.api;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.GenericContainer;
@@ -20,6 +21,8 @@ import org.testcontainers.utility.DockerImageName;
  * running a real PostgreSQL database to ensure a shared, single-boot test context.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
+
 @Testcontainers
 public abstract class BaseIntegrationTest { // Classe abstrata para subir o contexto do Spring e do BD uma única vez
 
