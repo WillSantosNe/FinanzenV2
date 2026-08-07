@@ -1,5 +1,7 @@
 package com.finanzen.api.adapters.out.user;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
@@ -36,7 +38,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class JpaUserEntity implements UserDetails {
+public class JpaUserEntity implements UserDetails, Serializable{
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
