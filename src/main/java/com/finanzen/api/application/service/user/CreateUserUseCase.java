@@ -2,13 +2,12 @@ package com.finanzen.api.application.service.user;
 
 import com.finanzen.api.application.exceptions.DuplicateEmailException;
 import com.finanzen.api.application.ports.in.user.CreateUserPort;
+import com.finanzen.api.application.ports.out.user.PasswordEncoderPort;
 import com.finanzen.api.application.ports.out.user.UserEventPublisherPort;
 import com.finanzen.api.application.ports.out.user.UserRepositoryPort;
 import com.finanzen.api.domain.user.Role;
 import com.finanzen.api.domain.user.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
 /**
  * Application Service (Use Case) for user registration.
@@ -18,12 +17,11 @@ import org.springframework.stereotype.Service;
  * and password security (hashing).
  * </p>
  */
-@Service
 @RequiredArgsConstructor
 public class CreateUserUseCase implements CreateUserPort {
 
     private final UserRepositoryPort repository;
-    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoderPort passwordEncoder;
     private final UserEventPublisherPort userEventPublisherPort;
 
     /**

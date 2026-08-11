@@ -4,7 +4,6 @@ import com.finanzen.api.application.exceptions.TransactionNotFoundException;
 import com.finanzen.api.application.ports.in.transaction.FindTransactionByIdPort;
 import com.finanzen.api.application.ports.out.transaction.TransactionRepositoryPort;
 import com.finanzen.api.domain.transaction.Transaction;
-import org.springframework.stereotype.Service;
 
 /**
  * Application Service (Use Case) for retrieving a specific transaction.
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
  * and maps any potential "not found" scenario into a domain-specific exception.
  * </p>
  */
-@Service
 public class FindTransactionByIdUseCase implements FindTransactionByIdPort {
 
     private final TransactionRepositoryPort repository;

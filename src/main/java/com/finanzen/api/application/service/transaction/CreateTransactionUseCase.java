@@ -2,19 +2,14 @@ package com.finanzen.api.application.service.transaction;
 
 import com.finanzen.api.application.exceptions.BusinessException;
 import com.finanzen.api.application.ports.in.account.FindAccountByIdPort;
-import com.finanzen.api.application.ports.in.account.UpdateAccountBalancePort;
 import com.finanzen.api.application.ports.in.transaction.CreateTransactionPort;
-import com.finanzen.api.application.ports.in.transaction.FindTransactionByIdPort;
 import com.finanzen.api.application.ports.out.transaction.TransactionEventPublisherPort;
 import com.finanzen.api.application.ports.out.transaction.TransactionRepositoryPort;
 import com.finanzen.api.domain.account.Account;
 import com.finanzen.api.domain.transaction.Transaction;
 import com.finanzen.api.domain.transaction.TransactionType;
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -26,7 +21,6 @@ import java.time.LocalDateTime;
  * before persistence.
  * </p>
  */
-@Service
 @AllArgsConstructor
 public class CreateTransactionUseCase implements CreateTransactionPort {
 
@@ -42,7 +36,6 @@ public class CreateTransactionUseCase implements CreateTransactionPort {
      * @return the created {@link Transaction} domain object, including the generated ID and timestamp.
      */
     @Override
-    @Transactional // Integridade, se o banco falhar nao publica no kafka
     public Transaction create(Transaction transaction, String userEmail) {
         LocalDateTime now = LocalDateTime.now();
         transaction.setCreatedAt(now);

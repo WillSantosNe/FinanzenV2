@@ -4,7 +4,6 @@ import com.finanzen.api.application.dto.common.PageResult;
 import com.finanzen.api.application.ports.in.transaction.FindAllTransactionsPort;
 import com.finanzen.api.application.ports.out.transaction.TransactionRepositoryPort;
 import com.finanzen.api.domain.transaction.Transaction;
-import org.springframework.stereotype.Service;
 
 /**
  * Application Service (Use Case) for listing transactions.
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
  * a framework-agnostic response type ({@link PageResult}).
  * </p>
  */
-@Service
 public class FindAllTransactionsUseCase implements FindAllTransactionsPort {
 
     private final TransactionRepositoryPort repository;

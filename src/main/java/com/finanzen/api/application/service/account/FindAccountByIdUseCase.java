@@ -6,9 +6,7 @@ import com.finanzen.api.application.ports.out.account.AccountRepositoryPort;
 import com.finanzen.api.domain.account.Account;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Service;
 
-@Service
 @AllArgsConstructor
 public class FindAccountByIdUseCase implements FindAccountByIdPort {
 
@@ -23,7 +21,6 @@ public class FindAccountByIdUseCase implements FindAccountByIdPort {
      * @throws AccountNotFoundException if no transaction is found in the repository.
      */
     @Override
-    @Cacheable(value = "accounts", key = "#id")
     public Account findById(Long id, String authenticatedEmail) throws AccountNotFoundException {
         Account account =  repositoryPort.findById(id).orElseThrow(
                 () -> new AccountNotFoundException("Account with id: " + id + " not found")

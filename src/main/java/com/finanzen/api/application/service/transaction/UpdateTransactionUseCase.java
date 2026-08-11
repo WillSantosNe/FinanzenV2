@@ -5,7 +5,6 @@ import com.finanzen.api.application.ports.in.transaction.FindTransactionByIdPort
 import com.finanzen.api.application.ports.in.transaction.UpdateTransactionPort;
 import com.finanzen.api.application.ports.out.transaction.TransactionRepositoryPort;
 import com.finanzen.api.domain.transaction.Transaction;
-import org.springframework.stereotype.Service;
 
 /**
  * Application Service (Use Case) for updating transaction details.
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
  * values from the domain object, and persisting the change.
  * </p>
  */
-@Service
 public class UpdateTransactionUseCase implements UpdateTransactionPort {
 
     private final TransactionRepositoryPort repository;

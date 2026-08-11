@@ -4,7 +4,6 @@ import com.finanzen.api.application.dto.common.PageResult;
 import com.finanzen.api.application.ports.in.user.FindAllUsersPort;
 import com.finanzen.api.application.ports.out.user.UserRepositoryPort;
 import com.finanzen.api.domain.user.User;
-import org.springframework.stereotype.Service;
 
 /**
  * Application Service (Use Case) for listing system users.
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
  * boundary between the application and infrastructure layers.
  * </p>
  */
-@Service
 public class FindAllUsersUseCase implements FindAllUsersPort {
 
     private final UserRepositoryPort repository;

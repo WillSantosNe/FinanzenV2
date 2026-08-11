@@ -4,7 +4,6 @@ import com.finanzen.api.application.exceptions.TransactionNotFoundException;
 import com.finanzen.api.application.ports.in.transaction.DeleteTransactionPort;
 import com.finanzen.api.application.ports.in.transaction.FindTransactionByIdPort;
 import com.finanzen.api.application.ports.out.transaction.TransactionRepositoryPort;
-import org.springframework.stereotype.Service;
 
 /**
  * Application Service (Use Case) for deleting existing transactions.
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
  * "find-then-delete" flow using inbound ports.
  * </p>
  */
-@Service
 public class DeleteTransactionUseCase implements DeleteTransactionPort{
 
     private final TransactionRepositoryPort repository;

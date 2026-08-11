@@ -5,9 +5,7 @@ import com.finanzen.api.application.ports.in.account.FindAllAccountsPort;
 import com.finanzen.api.application.ports.out.account.AccountRepositoryPort;
 import com.finanzen.api.domain.account.Account;
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
 
-@Service
 @AllArgsConstructor
 public class FindAllAccountsUseCase implements FindAllAccountsPort {
 

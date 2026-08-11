@@ -7,7 +7,6 @@ import com.finanzen.api.application.ports.out.auth.AuthenticationProviderPort;
 import com.finanzen.api.application.ports.out.auth.TokenGeneratorPort;
 import com.finanzen.api.application.ports.out.user.UserRepositoryPort;
 import com.finanzen.api.domain.user.User;
-import org.springframework.stereotype.Service;
 
 /**
  * Service implementation for the user authentication use case.
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
  * through an outbound provider and generating a token upon successful verification.
  * </p>
  */
-@Service
 public class AuthenticateUserUseCase implements AuthenticateUserPort {
 
     private final AuthenticationProviderPort authProvider;

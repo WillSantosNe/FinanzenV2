@@ -4,7 +4,6 @@ import com.finanzen.api.application.exceptions.UserNotFoundException;
 import com.finanzen.api.application.ports.in.user.FindUserByIdPort;
 import com.finanzen.api.application.ports.out.user.UserRepositoryPort;
 import com.finanzen.api.domain.user.User;
-import org.springframework.stereotype.Service;
 
 /**
  * Application Service (Use Case) for retrieving a specific user by ID.
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
  * to a domain-specific {@link UserNotFoundException}.
  * </p>
  */
-@Service
 public class FindUserByIdUseCase implements FindUserByIdPort {
 
     private final UserRepositoryPort repository;

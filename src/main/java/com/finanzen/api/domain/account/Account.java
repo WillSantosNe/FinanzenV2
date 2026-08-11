@@ -1,6 +1,6 @@
 package com.finanzen.api.domain.account;
 
-import com.finanzen.api.application.exceptions.BusinessException;
+import com.finanzen.api.domain.exceptions.DomainRuleException;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -75,7 +75,7 @@ public class Account implements Serializable {
      *
      * @param amountDelta the value to be added to (or subtracted from) the balance.
      * @throws IllegalArgumentException if the provided delta is null.
-     * @throws BusinessException        if the operation is a debit and funds are insufficient.
+     * @throws DomainRuleException        if the operation is a debit and funds are insufficient.
      */
     public void applyDelta(BigDecimal amountDelta) {
         if (amountDelta == null) {
@@ -88,7 +88,7 @@ public class Account implements Serializable {
 
             // Guard Clause: Overdraft prevention
             if (this.balance.compareTo(absoluteDelta) < 0) {
-                throw new BusinessException("Insufficient funds for this operation");
+                throw new DomainRuleException("Insufficient funds for this operation");
             }
         }
 

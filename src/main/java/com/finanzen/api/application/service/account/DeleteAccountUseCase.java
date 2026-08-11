@@ -4,9 +4,7 @@ import com.finanzen.api.application.ports.in.account.DeleteAccountPort;
 import com.finanzen.api.application.ports.in.account.FindAccountByIdPort;
 import com.finanzen.api.application.ports.out.account.AccountRepositoryPort;
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
 
-@Service
 @AllArgsConstructor
 public class DeleteAccountUseCase implements DeleteAccountPort {
 

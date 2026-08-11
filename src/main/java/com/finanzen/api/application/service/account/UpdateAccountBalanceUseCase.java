@@ -6,7 +6,6 @@ import com.finanzen.api.application.ports.out.account.AccountRepositoryPort;
 import com.finanzen.api.domain.account.Account;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
@@ -18,7 +17,6 @@ import java.math.BigDecimal;
  * domain layer, and ensures the new system state is properly persisted via the outbound port.
  * </p>
  */
-@Service
 @AllArgsConstructor
 public class UpdateAccountBalanceUseCase implements UpdateAccountBalancePort {
 
@@ -26,7 +24,6 @@ public class UpdateAccountBalanceUseCase implements UpdateAccountBalancePort {
     private final FindAccountByIdPort findAccountByIdPort;
 
     @Override
-    @CacheEvict(value = "accounts", key = "#id")
     public Account execute(Long id, BigDecimal amountDelta, String authenticatedEmail) {
         Account account = findAccountByIdPort.findById(id, authenticatedEmail);
 
