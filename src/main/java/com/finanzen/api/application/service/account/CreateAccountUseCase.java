@@ -20,7 +20,7 @@ public class CreateAccountUseCase implements CreateAccountPort {
         Account accountToSave = new Account(
                 null,
                 account.getAccountNumber(),
-                account.getBalance(),
+                java.math.BigDecimal.ZERO,
                 account.getAccountType(),
                 userEmail
         );

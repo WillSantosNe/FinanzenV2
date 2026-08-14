@@ -34,8 +34,8 @@ public class Account implements Serializable {
         if (balance == null) {
             throw new IllegalArgumentException("The initial account balance cannot be null.");
         }
-        if (balance.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("The account balance must be greater than zero.");
+        if (balance.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("The initial account balance cannot be negative.");
         }
 
         this.id = id;
