@@ -1,10 +1,9 @@
-package com.finanzen.api.application.service;
+package com.finanzen.api.application.service.user;
 
 import com.finanzen.api.application.exceptions.DuplicateEmailException;
 import com.finanzen.api.application.ports.out.user.PasswordEncoderPort;
 import com.finanzen.api.application.ports.out.user.UserEventPublisherPort;
 import com.finanzen.api.application.ports.out.user.UserRepositoryPort;
-import com.finanzen.api.application.service.user.CreateUserUseCase;
 import com.finanzen.api.domain.user.Role;
 import com.finanzen.api.domain.user.User;
 import org.junit.jupiter.api.Test;
