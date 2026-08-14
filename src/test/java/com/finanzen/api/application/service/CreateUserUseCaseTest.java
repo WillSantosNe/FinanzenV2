@@ -19,6 +19,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 
+/**
+ * Unit tests for {@link CreateUserUseCase}.
+ * <p>
+ * Ensures that the core business rules for user registration are strictly applied,
+ * isolating external dependencies such as databases and message brokers via Mockito.
+ * </p>
+ */
 @ExtendWith(MockitoExtension.class)
 public class CreateUserUseCaseTest {
 
@@ -29,6 +36,15 @@ public class CreateUserUseCaseTest {
     @Mock private PasswordEncoderPort passwordEncoder;
     @Mock private UserEventPublisherPort userEventPublisherPort;
 
+    /**
+     * Tests the successful creation of a user.
+     * <p>
+     * <b>Scenario:</b> A valid, non-existing email is provided.<br>
+     * <b>Action:</b> The use case is executed to create the user.<br>
+     * <b>Expected Result:</b> The user is successfully created, the password is encrypted,
+     * and a "User Created" event is published to the message broker.
+     * </p>
+     */
     @Test
     public void should_create_user_encrypt_password_and_publish_event(){
 
@@ -51,6 +67,14 @@ public class CreateUserUseCaseTest {
     }
 
 
+    /**
+     * Tests the rejection of user creation when an email is duplicated.
+     * <p>
+     * <b>Scenario:</b> An already existing email is provided.<br>
+     * <b>Action:</b> The use case is executed to create the user.<br>
+     * <b>Expected Result:</b> The user is not created, the flow is aborted, and a DuplicateEmailException is thrown.
+     * </p>
+     */
     @Test
     public void should_throw_duplicate_email_exception_when_email_already_exists(){
        // Arrange
