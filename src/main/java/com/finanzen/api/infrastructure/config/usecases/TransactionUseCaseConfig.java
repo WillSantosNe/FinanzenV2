@@ -2,6 +2,7 @@ package com.finanzen.api.infrastructure.config.usecases;
 
 import com.finanzen.api.application.ports.in.account.FindAccountByIdPort;
 import com.finanzen.api.application.ports.in.transaction.FindTransactionByIdPort;
+import com.finanzen.api.application.ports.out.account.AccountRepositoryPort;
 import com.finanzen.api.application.ports.out.transaction.TransactionEventPublisherPort;
 import com.finanzen.api.application.ports.out.transaction.TransactionRepositoryPort;
 import com.finanzen.api.application.service.transaction.*;
@@ -13,8 +14,9 @@ public class TransactionUseCaseConfig {
     @Bean
     public CreateTransactionUseCase createTransactionUseCase(TransactionRepositoryPort repository,
                                                              TransactionEventPublisherPort transactionEventPublisherPort,
-                                                             FindAccountByIdPort findAccountByIdPort) {
-        return new CreateTransactionUseCase(repository, transactionEventPublisherPort, findAccountByIdPort);
+                                                             FindAccountByIdPort findAccountByIdPort,
+                                                             AccountRepositoryPort accountRepositoryPort) {
+        return new CreateTransactionUseCase(repository, transactionEventPublisherPort, findAccountByIdPort, accountRepositoryPort);
     }
 
     @Bean
