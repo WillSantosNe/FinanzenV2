@@ -3,6 +3,7 @@ package com.finanzen.api.application.service.transaction;
 import com.finanzen.api.application.exceptions.BusinessException;
 import com.finanzen.api.application.ports.in.account.FindAccountByIdPort;
 import com.finanzen.api.application.ports.in.transaction.CreateTransactionPort;
+import com.finanzen.api.application.ports.out.account.AccountRepositoryPort;
 import com.finanzen.api.application.ports.out.transaction.TransactionEventPublisherPort;
 import com.finanzen.api.application.ports.out.transaction.TransactionRepositoryPort;
 import com.finanzen.api.domain.account.Account;
@@ -10,6 +11,7 @@ import com.finanzen.api.domain.transaction.Transaction;
 import com.finanzen.api.domain.transaction.TransactionType;
 import lombok.AllArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -27,6 +29,7 @@ public class CreateTransactionUseCase implements CreateTransactionPort {
     private final TransactionRepositoryPort repository;
     private final TransactionEventPublisherPort eventPublisher;
     private final FindAccountByIdPort findAccountByIdPort;
+    private final AccountRepositoryPort accountRepositoryPort;
 
     /**
      * Executes the use case to create a new transaction.
@@ -53,19 +56,20 @@ public class CreateTransactionUseCase implements CreateTransactionPort {
         );
 
         if (isDuplicate) {
-
             throw  new BusinessException("Transaction already exists");
         }
 
         // Verifica se conta existe
         Account account = findAccountByIdPort.findById(transaction.getAccountId(), userEmail);
-
+        BigDecimal transactionAmount = transaction.getAmount();
 
         if (transaction.getType() == TransactionType.EXPENSE) {
-            if (account.getBalance().compareTo(transaction.getAmount()) < 0) {
-                throw new BusinessException("Insufficient funds for this operation");
-            }
+            transactionAmount = transactionAmount.negate();
         }
+
+        // Muda saldo da conta
+        account.applyDelta(transactionAmount);
+        accountRepositoryPort.save(account);
 
         // Salva transaction
         Transaction savedTransaction = repository.save(transaction);
