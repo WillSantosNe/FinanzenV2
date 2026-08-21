@@ -10,6 +10,7 @@ import com.finanzen.api.domain.user.User;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -70,7 +71,13 @@ public class AuthController {
         // Traduz o DTO de entrada para o formato que a porta de entrada exige
         LoginRequestDto loginRequestDto = new LoginRequestDto(dto.email(), dto.password());
 
-        // Chama a porta de entrada e retorna o token gerado
-        return ResponseEntity.ok(authenticateUserPort.authenticate(loginRequestDto));
+        try {
+            // Tenta bater na porta
+            String token = authenticateUserPort.authenticate(loginRequestDto);
+            return ResponseEntity.ok(token);
+        } catch (BadCredentialsException ex) {
+            // Captura antes de vazar para o spring e traduz para 401
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credentials are invalid");
+        }
     }
 }
